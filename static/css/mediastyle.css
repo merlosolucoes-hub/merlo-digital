@@ -1,0 +1,114 @@
+/* MERLÔ DIGITAL - MOBILE REFINED V3
+   Fontes menores e mais delicadas. Botões mantidos.
+*/
+
+/* --- TRAVA GERAL DE TELA --- */
+html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* --- AJUSTES PARA CELULARES --- */
+@media (max-width: 768px) {
+
+    /* Base de fonte menor para todo o site mobile */
+    body {
+        font-size: 0.9rem; /* Reduzido de 1rem/0.95rem */
+    }
+
+    /* 1. CONTAINER & ESTRUTURA */
+    .container {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+        width: 100% !important;
+        overflow: hidden;
+    }
+
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
+
+    .col-lg-8, .col-md-4, .col-md-6, .col-12 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* --- HERO SECTION (Ajuste de Fontes) --- */
+    .hero-section {
+        padding: 30px 0 20px 0 !important;
+        text-align: center !important;
+    }
+
+    /* TÍTULO BEM MENOR */
+    .hero-title {
+        font-size: 1.5rem !important; /* Reduzido de 1.8rem */
+        line-height: 1.3;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    /* SUBTÍTULO MENOR */
+    .hero-subtitle {
+        font-size: 0.9rem; /* Reduzido de 1rem */
+        line-height: 1.5;
+        color: var(--text-muted);
+        width: 100%; /* Largura total agora que a fonte é pequena */
+        margin-bottom: 25px;
+    }
+
+    /* --- BOTÕES (MANTIDOS IGUAIS) --- */
+    .hero-section .btn {
+        display: block;
+        width: 100%;
+        max-width: 260px; /* Mantém a trava de largura */
+        margin: 0 auto 15px auto !important; /* Mantém centralização e margens */
+        padding: 12px 0;
+        font-size: 0.95rem; /* Mantém legibilidade do botão */
+    }
+
+    .hero-section .btn:last-child {
+        margin-bottom: 0;
+    }
+
+    /* --- OUTROS TÍTULOS E ÍCONES --- */
+    h2 { font-size: 1.3rem !important; } /* Títulos de seções menores */
+    h3 { font-size: 1.15rem !important; } /* Títulos de cards menores */
+
+    .row.mt-5 { margin-top: 25px !important; }
+
+    .col-md-4 { margin-bottom: 15px; padding: 0 10px !important; }
+
+    .col-md-4 .p-4 {
+        padding: 20px 15px !important;
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .icon-box {
+        font-size: 1.8rem; /* Ícone levemente menor */
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    /* --- SOBRE E IMAGEM --- */
+    .bg-dark.py-5 {
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+    }
+
+    /* --- FORMULÁRIOS --- */
+    .form-control {
+        width: 100% !important;
+        font-size: 0.9rem; /* Texto digitado menor */
+    }
+
+    .invisible-container {
+        max-width: 90%;
+        margin: auto;
+    }
+}

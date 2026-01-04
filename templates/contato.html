@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row">
+
+                <div class="col-md-5 mb-4">
+                    <div class="contact-info-box h-100">
+                        <h3 class="mb-4">Fale Conosco</h3>
+                        <p class="text-muted mb-4">
+                            Estamos prontos para entender seu desafio e propor a solução técnica ideal.
+                        </p>
+
+                        <div class="mb-4">
+                            <h6 class="text-white"><i class="bi bi-envelope text-info"></i> E-mail</h6>
+                            <a href="mailto:merlosolucoes@gmail.com" class="text-muted">merlosolucoes@gmail.com</a>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-white"><i class="bi bi-whatsapp text-info"></i> WhatsApp / Telefone</h6>
+                            <a href="https://wa.me/5547992539750" target="_blank" class="text-muted">(47) 99253-9750</a>
+                        </div>
+
+                        <div class="mt-5">
+                            <small class="text-muted d-block">Atendimento B2B</small>
+                            <small class="text-muted">Segunda a Sábado</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="p-4 bg-dark border border-secondary rounded">
+                        <h4 class="mb-3">Solicitar Contato</h4>
+                        <form action="{{ url_for('contato') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Seu Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required placeholder="Ex: João Silva">
+                            </div>
+                            <div class="mb-3">
+                                <label for="empresa" class="form-label">Nome da Empresa</label>
+                                <input type="text" class="form-control" id="empresa" name="empresa" placeholder="Ex: Silva Tech Ltda">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-mail Corporativo</label>
+                                <input type="email" class="form-control" id="email" name="email" required placeholder="nome@empresa.com.br">
+                            </div>
+                            <div class="mb-3">
+                                <label for="mensagem" class="form-label">Como podemos ajudar?</label>
+                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required placeholder="Descreva brevemente sua necessidade..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-merlo w-100">Enviar Mensagem</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2>O Que Desenvolvemos</h2>
+        <p class="text-muted">Soluções tecnológicas focadas no crescimento da sua empresa.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="service-card">
+                <i class="bi bi-laptop icon-box"></i>
+                <h4>Websites Corporativos</h4>
+                <p class="text-muted mt-3">
+                    A vitrine digital da sua empresa.
+                </p>
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Design Responsivo e Moderno</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Otimização para Google (SEO)</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Painel administrativo fácil</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="service-card">
+                <i class="bi bi-hdd-network icon-box"></i>
+                <h4>Sistemas Web</h4>
+                <p class="text-muted mt-3">
+                    Ferramentas para automação e gestão.
+                </p>
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Dashboards Administrativos</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Automação de Processos</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> ERPs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 mt-4">
+            <div class="p-4 border border-secondary rounded bg-dark">
+                <h5><i class="bi bi-code-slash text-warning"></i> Nossa Stack Tecnológica</h5>
+                <p class="mb-0 text-muted">
+                    Todo o nosso desenvolvimento é feito em <strong>Python</strong> utilizando <strong>Flask</strong>.
+                    Isso garante um código limpo, manutenção simplificada e segurança de nível empresarial, fugindo das vulnerabilidades comuns de plataformas genéricas.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

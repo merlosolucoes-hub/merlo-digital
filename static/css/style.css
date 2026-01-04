@@ -1,0 +1,198 @@
+:root {
+    /* --- Paleta Definida pela Merlô Digital --- */
+    --brand-primary: #16305D;    /* Azul Profundo (Fundo Principal) */
+    --text-main: #DFE2E6;        /* Texto Claro (Contraste alto) */
+    --text-muted: #BEC4CC;       /* Texto Secundário (Cinza azulado) */
+
+    /* --- Cores Derivadas para Interface --- */
+    --bg-darker: #0f2242;        /* Um tom mais escuro para Navbar/Cards */
+    --accent-highlight: #4facfe; /* Um azul elétrico suave para detalhes/botões */
+    --white: #ffffff;
+}
+
+body {
+    background-color: var(--brand-primary);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--white);
+    font-weight: 700;
+}
+
+a { text-decoration: none; }
+
+/* --- Navbar --- */
+.navbar {
+    background-color: rgba(15, 34, 66, 0.95) !important; /* --bg-darker com transparência */
+    border-bottom: 1px solid rgba(190, 196, 204, 0.1);   /* Borda sutil usando a cor secundária */
+    backdrop-filter: blur(10px);
+}
+
+.layout-wrapper {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden; /* Corta qualquer vazamento */
+}
+
+.navbar-brand {
+    font-family: 'Nunito', sans-serif; /* Aplica a fonte Nunito */
+    font-size: 1.9rem;
+    font-weight: 700; /* Negrito */
+    color: var(--text-main) !important;
+    letter-spacing: -0.5px; /* Um leve ajuste para ficar mais compacto e moderno */
+    text-transform: lowercase; /* Força o minúsculo */
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    margin-left: 15px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--white) !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+/* --- Hero Section (Home) --- */
+.hero-section {
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    color: var(--white);
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+    line-height: 1.6;
+}
+
+/* Botão Principal - Estilo "Ghost" refinado */
+.btn-merlo {
+    background-color: transparent;
+    border: 2px solid var(--text-main);
+    color: var(--text-main);
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-merlo:hover {
+    background-color: var(--text-main);
+    color: var(--brand-primary);
+    box-shadow: 0 0 15px rgba(223, 226, 230, 0.3);
+}
+
+/* --- Cards (Serviços e Infos) --- */
+.service-card, .contact-info-box {
+    background-color: var(--bg-darker); /* Fundo um pouco mais escuro para destacar do body */
+    border: 1px solid rgba(190, 196, 204, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+    height: 100%;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--text-muted);
+}
+
+.icon-box {
+    font-size: 2.5rem;
+    color: var(--text-main); /* Ícones na cor clara */
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+/* --- Formulários --- */
+.form-control {
+    background-color: rgba(22, 48, 93, 0.5); /* Fundo misturado com a cor principal */
+    border: 1px solid var(--text-muted);
+    color: var(--white);
+    border-radius: 5px;
+}
+
+.form-control::placeholder {
+    color: rgba(190, 196, 204, 0.5);
+}
+
+.form-control:focus {
+    background-color: var(--bg-darker);
+    border-color: var(--white);
+    color: var(--white);
+    box-shadow: none; /* Remove o brilho padrão do bootstrap */
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--bg-darker);
+    padding: 40px 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(190, 196, 204, 0.1);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* --- Utilitários de Texto --- */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-info {
+    color: var(--accent-highlight) !important; /* Detalhes pequenos em azul claro */
+}
+
+/* Ajuste nas bordas do Bootstrap */
+.border-secondary {
+    border-color: rgba(190, 196, 204, 0.2) !important;
+}
+
+.bg-dark {
+    background-color: var(--bg-darker) !important;
+}
+
+/* --- Botão Flutuante WhatsApp --- */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 25px;
+    right: 25px;
+    background-color: #25d366; /* Verde Oficial do WhatsApp */
+    color: #FFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 9999; /* Garante que fique por cima de tudo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-decoration: none; /* Remove sublinhado se houver */
+}
+
+/* Efeito ao passar o mouse */
+.whatsapp-float:hover {
+    background-color: #128c7e; /* Verde mais escuro */
+    color: #FFF;
+    transform: scale(1.1); /* Aumenta levemente */
+    box-shadow: 0px 6px 15px rgba(0, 240, 255, 0.3); /* Brilho neon sutil da sua marca */
+}
