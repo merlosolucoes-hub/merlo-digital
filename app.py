@@ -46,22 +46,24 @@ def contato():
 
             # 3. Corpo do E-mail
             corpo_email = f"""
-            NOVA SOLICITAÇÃO DE CONTATO - MERLÔ DIGITAL
-            -------------------------------------------
-            Nome: {nome}
-            Empresa: {empresa}
-            E-mail do Cliente: {email_cliente}
+                    NOVA SOLICITAÇÃO DE CONTATO - MERLÔ DIGITAL
+                    -------------------------------------------
+                    Nome: {nome}
+                    Empresa: {empresa}
+                    E-mail do Cliente: {email_cliente}
 
-            Mensagem:
-            {mensagem_cliente}
-            -------------------------------------------
-            """
+                    Mensagem:
+                    {mensagem_cliente}
+                    -------------------------------------------
+                    """
             msg.attach(MIMEText(corpo_email, 'plain'))
 
-            # 4. Conectar ao servidor do Gmail e enviar
-            # Porta 587 é para TLS (segurança)
-            server = smtplib.SMTP('smtp.gmail.com', 465)
-            server.starttls()
+            # 4. Conectar ao servidor do Gmail
+            # CORREÇÃO AQUI: Usar SMTP_SSL para a porta 465
+            server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+
+            # Nota: Não precisa de server.starttls() quando usa SMTP_SSL
+
             server.login(my_email, my_password)
             text = msg.as_string()
             server.sendmail(my_email, email_destino, text)
