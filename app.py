@@ -31,9 +31,9 @@ def contato():
         empresa = request.form.get('empresa')
         mensagem_cliente = request.form.get('mensagem')
 
-        # --- LÓGICA DE ENVIO DE E-MAIL ---
+        # --- LÓGICA DE ENVIO DE E-MAIL (HOSTINGER) ---
         try:
-            # 1. Pegar credenciais do .env
+            # 1. Pegar credenciais do .env (Configuradas no Render)
             my_email = os.getenv('EMAIL_USER')
             my_password = os.getenv('EMAIL_PASS')
             email_destino = os.getenv('EMAIL_DESTINO')
@@ -58,11 +58,9 @@ def contato():
                     """
             msg.attach(MIMEText(corpo_email, 'plain'))
 
-            # 4. Conectar ao servidor do Gmail
-            # CORREÇÃO AQUI: Usar SMTP_SSL para a porta 465
-            server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-
-            # Nota: Não precisa de server.starttls() quando usa SMTP_SSL
+            # 4. Conectar ao servidor da HOSTINGER
+            # Hostinger usa: smtp.hostinger.com | Porta: 465 (SSL)
+            server = smtplib.SMTP_SSL('smtp.hostinger.com', 465)
 
             server.login(my_email, my_password)
             text = msg.as_string()
