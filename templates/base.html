@@ -36,6 +36,9 @@
                         <a class="nav-link {% if request.path == '/servicos' %}active{% endif %}" href="{{ url_for('servicos') }}">Serviços</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/portfolio' %}active{% endif %}" href="{{ url_for('portfolio') }}">Portfólio</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == '/contato' %}active{% endif %}" href="{{ url_for('contato') }}">Contato</a>
                     </li>
                 </ul>

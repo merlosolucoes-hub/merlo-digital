@@ -1,5 +1,8 @@
 import os
-import resend  # <--- Nova biblioteca
+import resend
+import requests  # <--- Importar requests
+import csv  # <--- Importar csv
+from io import StringIO  # <--- Importar StringIO
 from flask import Flask, render_template, request, flash, redirect, url_for
 from dotenv import load_dotenv
 
@@ -8,16 +11,53 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave_dev_padrao')
 
-# Configura a chave do Resend
 resend.api_key = os.getenv('RESEND_API_KEY')
+
+
+# --- FUNÇÃO AUXILIAR PARA PEGAR DADOS DO SHEET ---
+def get_portfolio_data():
+    url = os.getenv('PORTFOLIO_SHEET_URL')
+    if not url:
+        return []
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Garante que deu 200 OK
+
+        # Transforma o texto CSV em um formato de arquivo legível
+        csv_file = StringIO(response.content.decode('utf-8'))
+
+        # Lê o CSV mapeando para dicionários (assume que a 1ª linha é o cabeçalho)
+        # Ordem esperada das colunas na planilha: Título, Link, Descrição, Tipo, Logo
+        reader = csv.DictReader(csv_file)
+
+        projects = []
+        for row in reader:
+            # Limpeza básica dos dados (remove espaços extras das chaves se houver)
+            clean_row = {k.strip(): v.strip() for k, v in row.items()}
+            projects.append(clean_row)
+
+        return projects
+    except Exception as e:
+        print(f"Erro ao buscar portfólio: {e}")
+        return []
+
 
 @app.route('/')
 def index():
     return render_template('index.html', title="Início")
 
+
 @app.route('/servicos')
 def servicos():
     return render_template('servicos.html', title="Serviços")
+
+
+# --- NOVA ROTA PORTFÓLIO ---
+@app.route('/portfolio')
+def portfolio():
+    projects = get_portfolio_data()
+    return render_template('portfolio.html', title="Portfólio", projects=projects)
 
 @app.route('/contato', methods=['GET', 'POST'])
 def contato():
