@@ -3,7 +3,7 @@ import resend
 import requests  # <--- Importar requests
 import csv  # <--- Importar csv
 from io import StringIO  # <--- Importar StringIO
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
@@ -51,26 +51,47 @@ def get_portfolio_data():
 
 @app.route('/')
 def index():
-    return render_template('index.html', title="Início")
+    # AQUI ESTÁ A MUDANÇA: Título forte e Descrição vendedora
+    return render_template(
+        'index.html',
+        title="Merlô Digital | Engenharia de Software e Sites",
+        description="Especialistas em desenvolvimento web de alta performance. Transformamos processos complexos em sistemas seguros e escaláveis com Python. Solicite um orçamento."
+    )
 
 
 @app.route('/servicos')
 def servicos():
-    return render_template('servicos.html', title="Serviços")
+    return render_template(
+        'servicos.html',
+        title="Serviços de Desenvolvimento Web - Merlô Digital",
+        description="Conheça nossas soluções em criação de sites, sistemas web, automação e dashboards administrativos personalizados para sua empresa."
+    )
 
 @app.route('/servicos/website')
 def servicos_website():
-    return render_template('servicos_website.html', title="Criação de Sites e Sistemas")
+    return render_template(
+        'servicos_website.html',
+        title="Criação de Sites Profissionais e Landing Pages | Merlô Digital",
+        description="Sites rápidos, otimizados para SEO e responsivos. Do site institucional básico até catálogos dinâmicos integrados ao Google Sheets."
+    )
 
 @app.route('/servicos/sistemas')
 def servicos_sistemas():
-    return render_template('servicos_sistemas.html', title="Sistemas Web Personalizados")
+    return render_template(
+        'servicos_sistemas.html',
+        title="Desenvolvimento de Sistemas Web e ERPs | Merlô Digital",
+        description="Sistemas sob medida em Python. Dashboards, controle de estoque, área de membros e automação de processos empresariais."
+    )
 
 @app.route('/portfolio')
 def portfolio():
     projects = get_portfolio_data()
-    return render_template('portfolio.html', title="Portfólio", projects=projects)
-
+    return render_template(
+        'portfolio.html',
+        title="Portfólio de Projetos - Merlô Digital",
+        description="Veja nossos casos de sucesso. Sites institucionais e sistemas complexos desenvolvidos para gerar resultados reais.",
+        projects=projects
+    )
 @app.route('/contato', methods=['GET', 'POST'])
 def contato():
     if request.method == 'POST':
@@ -108,14 +129,11 @@ def contato():
 
         return redirect(url_for('contato'))
 
-    return render_template('contato.html', title="Contato")
-
-
-# No topo do arquivo, certifique-se de importar jsonify
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
-
-
-# ... (seu código existente de configuração e rotas) ...
+    return render_template(
+        'contato.html',
+        title="Fale Conosco | Orçamento de Software",
+        description="Entre em contato com a Merlô Digital. Atendimento via WhatsApp ou E-mail para tirar seu projeto do papel."
+    )
 
 @app.route('/api/track-click', methods=['POST'])
 def track_click():
@@ -192,6 +210,46 @@ def track_click():
             return jsonify({'status': 'erro_envio'}), 500
 
     return jsonify({'status': 'acumulando', 'info': status_msg}), 200
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    """Gera o sitemap XML automaticamente para o Google"""
+    host = "https://merlodigital.com"  # SEU DOMÍNIO FINAL AQUI
+    pages = [
+        '/', '/servicos', '/servicos/website',
+        '/servicos/sistemas', '/portfolio', '/contato'
+    ]
+
+    sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">"""
+
+    for page in pages:
+        sitemap_xml += f"""
+        <url>
+            <loc>{host}{page}</loc>
+            <changefreq>monthly</changefreq>
+            <priority>{'1.0' if page == '/' else '0.8'}</priority>
+        </url>"""
+
+    sitemap_xml += "</urlset>"
+
+    response = make_response(sitemap_xml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
+
+
+@app.route('/robots.txt')
+def robots():
+    """Diz ao Google o que ele pode ler"""
+    lines = [
+        "User-agent: *",
+        "Disallow: ",
+        "Sitemap: https://merlodigital.com/sitemap.xml"
+    ]
+    response = make_response("\n".join(lines))
+    response.headers["Content-Type"] = "text/plain"
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
