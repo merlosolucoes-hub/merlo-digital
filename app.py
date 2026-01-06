@@ -165,7 +165,7 @@ def track_click():
 
         try:
             resend.Emails.send({
-                "from": "Merlô Tracker <contato@merlodigital.com>",
+                "from": "Merlô Tracker <merlotracker@merlodigital.com>",
                 "to": [email_destino],
                 "subject": f"📊 Relatório de Tráfego: {len(BUFFER_CLIQUES)} novos cliques",
                 "html": f"""
