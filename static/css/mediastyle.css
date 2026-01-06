@@ -1,6 +1,6 @@
-/* MERLÔ DIGITAL - MOBILE REFINED V3
-   Fontes menores e mais delicadas. Botões mantidos.
-*/
+/* ==========================================================================
+   PARTE INTACTA (Base Visual V3)
+   ========================================================================== */
 
 /* --- TRAVA GERAL DE TELA --- */
 html, body {
@@ -23,6 +23,8 @@ html, body {
         padding-left: 25px !important;
         padding-right: 25px !important;
         width: 100% !important;
+        /* OBS: O overflow hidden aqui causa o corte da etiqueta 'Start'.
+           Fiz um override mais abaixo para corrigir isso sem mexer aqui. */
         overflow: hidden;
     }
 
@@ -112,3 +114,195 @@ html, body {
         margin: auto;
     }
 }
+
+/* ==========================================================================
+   NOVAS CORREÇÕES E ESTILOS (Tabelas e Preços)
+   Aplicadas APÓS a parte intacta para corrigir os cortes e melhorar o visual
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+
+    /* --- 1. CORREÇÃO CRÍTICA DO CORTE (HEADER E ETIQUETAS) --- */
+
+    /* Precisamos permitir overflow visível para as etiquetas (Badges) aparecerem */
+    .container {
+        overflow: visible !important;
+    }
+
+    /* Empurramos o conteúdo para baixo para não ser tapado pelo menu fixo */
+    .page-header {
+        margin-top: 80px !important;
+        padding-top: 20px !important;
+        padding-bottom: 30px !important;
+        margin-bottom: 20px !important;
+        border-bottom: none; /* Remove a linha para colar na seção de baixo */
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: var(--white);
+    }
+
+    .page-header p {
+        color: var(--text-muted);
+        font-size: 1.0rem;
+    }
+
+    /* Ajuste para o card de Sistemas não colar no topo */
+    .pricing-card.pro {
+        margin-top: 20px;
+    }
+
+    /* --- 2. NOVA TABELA ESTILO "LISTA/CARD" (Muito mais bonita) --- */
+
+    /* Esconde o cabeçalho antigo da tabela */
+    .compare-table thead {
+        display: none;
+    }
+
+    /* Transforma a tabela em blocos */
+    .compare-table, .compare-table tbody, .compare-table tr, .compare-table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* Cada linha vira um "Cartão" fechado */
+    .compare-table tr {
+        margin-bottom: 20px;
+        background-color: var(--bg-darker);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* O Título do Recurso (ex: Estrutura) fica destacado no topo do card */
+    .compare-table td:first-child {
+        background-color: transparent;
+        font-size: 1.1rem;
+        color: var(--white);
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+    }
+
+    /* Os itens da lista (Basic, Standard...) */
+    .compare-table td {
+        text-align: right;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(255,255,255,0.05);
+        display: flex;
+        justify-content: space-between; /* Texto na esquerda, Valor na direita */
+        align-items: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .compare-table td:last-child {
+        border-bottom: none;
+    }
+
+    /* Usa o atributo data-label para mostrar o nome do plano na esquerda */
+    .compare-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 700;
+        color: var(--white);
+        font-size: 0.85rem;
+    }
+
+    /* Esconde o label vazio da primeira linha */
+    .compare-table td:first-child::before {
+        content: none;
+    }
+
+    /* --- 3. CARDS DE PREÇO (Empilhados) --- */
+    .pricing-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        margin-top: 20px;
+        padding: 10px 5px;
+        overflow: visible !important;
+    }
+
+    .pricing-card {
+        width: 100%;
+        overflow: visible !important; /* Garante que a etiqueta Start apareça */
+    }
+
+    /* --- 4. SEPARADOR (SISTEMAS WEB) --- */
+    .custom-separator {
+        border-left: none !important;
+        border-top: 1px solid rgba(190, 196, 204, 0.2);
+        padding-top: 30px;
+        margin-top: 30px;
+    }
+}
+
+/* ==========================================================================
+   📱 ESTILO DAS ABAS (MOBILE TABS)
+   ========================================================================== */
+
+/* Estilo dos Botões das Abas (Pills) */
+.mobile-tabs-comparison .nav-pills .nav-link {
+    color: var(--text-muted);
+    background-color: rgba(255,255,255,0.05);
+    margin: 0 5px 10px 0;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* Estado Ativo (Selecionado) */
+.mobile-tabs-comparison .nav-pills .nav-link.active {
+    background-color: var(--accent-highlight);
+    color: var(--brand-primary);
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4); /* Glow Azul */
+}
+
+/* Lista de Especificações dentro da Aba */
+.tab-spec-list {
+    list-style: none;
+    padding: 20px;
+    margin-top: 10px;
+    background-color: var(--bg-darker);
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.tab-spec-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.1); /* Linha pontilhada elegante */
+    font-size: 0.95rem;
+}
+
+.tab-spec-list li:last-child {
+    border-bottom: none;
+}
+
+/* Texto da Esquerda (Rótulo) */
+.spec-label {
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+/* Texto da Direita (Valor) */
+.spec-value {
+    text-align: right;
+    color: var(--text-muted);
+    font-weight: 500;

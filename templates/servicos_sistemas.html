@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header mb-0">
+    <div class="container pt-4">
+        <h1>Sistemas Web & ERPs</h1>
+        <p>Automação e inteligência de dados para sua empresa escalar.</p>
+    </div>
+</div>
+
+<section class="section-padding pt-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="pricing-card pro w-100" style="text-align: left; padding: 40px;">
+                    <div class="badge">Enterprise</div>
+                    <h3 class="mt-2">Desenvolvimento Sob Medida</h3>
+                    <p class="desc mb-4">Projetamos a ferramenta exata que seu processo exige.</p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-white mb-3">O que entregamos:</h5>
+                            <ul style="padding: 0; list-style: none;">
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-info me-2"></i> Painéis Administrativos (Dashboards)</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-info me-2"></i> Controle de Estoque e Vendas</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-info me-2"></i> Áreas de Membros / Login</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-info me-2"></i> Geração de Relatórios em PDF/Excel</li>
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-info me-2"></i> Integração com APIs Externas</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-6 custom-separator ps-md-4 mt-4 mt-md-0">
+                            <h5 class="text-white mb-3">Tecnologia:</h5>
+                            <p class="text-muted small">
+                                Utilizamos <strong>Python (Flask/Django)</strong> e Bancos de Dados Relacionais (PostgreSQL/MySQL) para garantir integridade e velocidade.
+                            </p>
+
+                            <div class="mt-4 p-3 bg-dark rounded border border-secondary text-center">
+                                <span class="d-block text-muted small mb-1">Investimento Inicial</span>
+                                <span class="d-block text-white fw-bold fs-4">Sob Consulta</span>
+                                <small class="text-muted">Análise de requisitos necessária</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('contato') }}" class="btn btn-merlo btn-lg w-100">
+                            Agendar Reunião de Levantamento
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="text-center mt-5 mb-5">
+            <p class="text-muted">Veja exemplos de sistemas que já desenvolvemos</p>
+            <a href="{{ url_for('portfolio') }}" class="btn btn-outline-light">
+                Acessar Portfólio
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

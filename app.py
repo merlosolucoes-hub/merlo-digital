@@ -52,8 +52,14 @@ def index():
 def servicos():
     return render_template('servicos.html', title="Serviços")
 
+@app.route('/servicos/website')
+def servicos_website():
+    return render_template('servicos_website.html', title="Criação de Sites e Sistemas")
 
-# --- NOVA ROTA PORTFÓLIO ---
+@app.route('/servicos/sistemas')
+def servicos_sistemas():
+    return render_template('servicos_sistemas.html', title="Sistemas Web Personalizados")
+
 @app.route('/portfolio')
 def portfolio():
     projects = get_portfolio_data()

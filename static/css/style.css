@@ -229,3 +229,302 @@ footer {
     color: var(--brand-primary) !important;
     font-weight: 700;
 }
+
+
+/* ==========================================================================
+   NOVOS ESTILOS (SERVIÇOS, PREÇOS E TABELAS)
+   Adicionados respeitando o tema Dark Blue
+   ========================================================================== */
+
+/* Cabeçalho das páginas internas */
+.page-header {
+    padding: 60px 0 40px 0;
+    text-align: center;
+    background-color: var(--bg-darker);
+    border-bottom: 1px solid rgba(190, 196, 204, 0.1);
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--white);
+}
+
+.page-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+/* --- GRID DE PREÇOS --- */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.pricing-card {
+    background-color: var(--bg-darker); /* Fundo escuro igual ao do serviço */
+    padding: 40px 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(190, 196, 204, 0.1); /* Borda sutil */
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s, border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-highlight); /* Azul elétrico no hover */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Destaque para o Standard Plus */
+.pricing-card.plus {
+    border: 2px solid var(--accent-highlight);
+    background: linear-gradient(to bottom, var(--bg-darker), rgba(79, 172, 254, 0.1));
+}
+
+/* Etiqueta (Badge) nos Cards */
+.pricing-card .badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-main);
+    color: var(--brand-primary);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.pricing-card .highlight-badge {
+    background: var(--accent-highlight);
+    color: var(--white);
+}
+
+/* Tipografia dos Cards */
+.pricing-card h3 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.pricing-card .desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    height: 40px;
+}
+
+.pricing-card .price {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 25px;
+}
+
+.pricing-card .price span {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Ajuste específico para "Sob Consulta" */
+.pricing-card .price.price-text {
+    font-size: 1.5rem;
+    color: var(--accent-highlight);
+    margin-top: 15px;
+}
+
+/* Listas dentro dos Cards */
+.pricing-card ul {
+    text-align: left;
+    margin-bottom: 30px;
+    flex-grow: 1;
+    padding-left: 0;
+}
+
+.pricing-card ul li {
+    list-style: none;
+    margin-bottom: 12px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.pricing-card ul li i {
+    color: var(--accent-highlight);
+    margin-right: 10px;
+}
+
+/* Botão Link nos cards */
+.btn-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    background-color: transparent;
+    color: var(--accent-highlight);
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 2px solid var(--accent-highlight);
+    padding: 12px;
+    border-radius: 50px;
+    transition: 0.3s;
+}
+
+.btn-link:hover {
+    background: var(--accent-highlight);
+    color: var(--brand-primary);
+    text-decoration: none;
+}
+
+/* --- TABELA COMPARATIVA DARK --- */
+.comparison-section {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(190, 196, 204, 0.1);
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-darker);
+}
+
+.compare-table th, .compare-table td {
+    padding: 15px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+}
+
+.compare-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--white);
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.compare-table th.th-plus {
+    background-color: rgba(79, 172, 254, 0.2);
+    color: var(--accent-highlight);
+}
+
+.compare-table td:first-child {
+    text-align: left;
+    font-weight: bold;
+    color: var(--white);
+    background-color: var(--bg-darker);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.compare-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --- NOVOS BOTÕES DE PREÇO (Highlight) --- */
+.btn-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px 0;
+    font-size: 0.7rem;
+
+    /* Estilo Visual */
+    background-color: var(--accent-highlight);
+    color: var(--brand-primary); /* Texto escuro para contraste */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 50px;
+    border: none;
+
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);
+}
+
+.btn-pricing:hover {
+    background-color: var(--white);
+    color: var(--brand-primary);
+    transform: scale(1.05); /* Leve aumento */
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.6); /* Efeito Glow */
+    text-decoration: none;
+}
+
+/* Variação Outline para o botão Pro */
+.btn-pricing.outline {
+    background-color: transparent;
+    border: 2px solid var(--accent-highlight);
+    color: var(--accent-highlight);
+    box-shadow: none;
+}
+
+.btn-pricing.outline:hover {
+    background-color: var(--accent-highlight);
+    color: var(--brand-primary);
+}
+
+/* --- BOX DE OPCIONAIS (Hospedagem) --- */
+.optionals-box {
+    background-color: rgba(15, 34, 66, 0.6); /* Fundo sutil */
+    border: 1px dashed rgba(190, 196, 204, 0.3); /* Borda tracejada elegante */
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.optionals-box h4 {
+    color: var(--white);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* --- CORREÇÃO DO CABEÇALHO (Tira o buraco em baixo) --- */
+.page-header {
+    margin-bottom: 0 !important; /* Força margem zero */
+    padding-bottom: 60px; /* Dá o respiro interno, mas mantém o fundo */
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Garante que a seção seguinte encoste corretamente */
+.section-padding {
+    padding-top: 60px;
+}
+
+/* --- SEPARADOR INTELIGENTE (Sistemas Web) --- */
+/* No Desktop: Linha vertical na esquerda */
+.custom-separator {
+    border-left: 1px solid rgba(190, 196, 204, 0.2);
+}
+
+/* No Mobile: Linha horizontal no topo */
+@media (max-width: 768px) {
+    .custom-separator {
+        border-left: none !important;
+        border-top: 1px solid rgba(190, 196, 204, 0.2);
+        padding-top: 30px;
+        margin-top: 30px;
+    }
+}
+
+}
