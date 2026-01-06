@@ -5,8 +5,14 @@ import csv  # <--- Importar csv
 from io import StringIO  # <--- Importar StringIO
 from flask import Flask, render_template, request, flash, redirect, url_for
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 
 load_dotenv()
+
+BUFFER_CLIQUES = []
+ULTIMO_ENVIO = datetime.now()  # Marca a hora que o servidor iniciou
+LIMITE_BUFFER = 10             # Quantidade para envio imediato
+LIMITE_TEMPO_MINUTOS = 10
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave_dev_padrao')
@@ -103,6 +109,89 @@ def contato():
         return redirect(url_for('contato'))
 
     return render_template('contato.html', title="Contato")
+
+
+# No topo do arquivo, certifique-se de importar jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+
+
+# ... (seu código existente de configuração e rotas) ...
+
+@app.route('/api/track-click', methods=['POST'])
+def track_click():
+    global BUFFER_CLIQUES, ULTIMO_ENVIO  # Acessa as variáveis globais
+
+    # 1. Recebe o dado do clique
+    data = request.get_json()
+    hora_atual = datetime.now()
+
+    novo_clique = {
+        "botao": data.get('botao', 'Desconhecido'),
+        "pagina": data.get('pagina_origem', '/'),
+        "destino": data.get('url_destino', '#'),
+        "hora_fmt": hora_atual.strftime("%d/%m/%Y às %H:%M:%S")
+    }
+
+    BUFFER_CLIQUES.append(novo_clique)
+
+    # 2. Verifica as condições de envio
+    # Condição A: Buffer cheio (10 cliques)
+    buffer_cheio = len(BUFFER_CLIQUES) >= LIMITE_BUFFER
+
+    # Condição B: Passou do tempo limite (10 min) E tem algo para enviar
+    tempo_passado = hora_atual - ULTIMO_ENVIO
+    tempo_esgotado = tempo_passado > timedelta(minutes=LIMITE_TEMPO_MINUTOS)
+    tem_algo = len(BUFFER_CLIQUES) > 0
+
+    deve_enviar = buffer_cheio or (tempo_esgotado and tem_algo)
+
+    status_msg = f"Buffer: {len(BUFFER_CLIQUES)}/{LIMITE_BUFFER} | Tempo: {int(tempo_passado.total_seconds() / 60)}min"
+
+    if deve_enviar:
+        email_destino = os.getenv('EMAIL_DESTINO')
+
+        # Monta lista HTML
+        itens_html = ""
+        for item in BUFFER_CLIQUES:
+            itens_html += f"""
+            <li style="margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">
+                <small style="color:#666">{item['hora_fmt']}</small><br>
+                <strong>{item['botao']}</strong> <br>
+                <span style="font-size:0.85em">De: {item['pagina']} &rarr; Para: {item['destino']}</span>
+            </li>
+            """
+
+        motivo = "Lote Completo (10 cliques)" if buffer_cheio else "Time-out (10 min sem envio)"
+
+        try:
+            resend.Emails.send({
+                "from": "Merlô Tracker <contato@merlodigital.com>",
+                "to": [email_destino],
+                "subject": f"📊 Relatório de Tráfego: {len(BUFFER_CLIQUES)} novos cliques",
+                "html": f"""
+                <div style="font-family: sans-serif; color: #333;">
+                    <h3 style="color: #16305D;">Atualização de Tráfego</h3>
+                    <p><strong>Motivo do envio:</strong> {motivo}</p>
+                    <ul style="list-style: none; padding: 0;">
+                        {itens_html}
+                    </ul>
+                    <hr>
+                    <small>Relógio reiniciado. Aguardando novos eventos.</small>
+                </div>
+                """
+            })
+            print(f"E-mail enviado! Motivo: {motivo}")
+
+            # 3. Limpeza e Reset
+            BUFFER_CLIQUES.clear()
+            ULTIMO_ENVIO = datetime.now()  # Reseta o relógio
+            return jsonify({'status': 'enviado', 'motivo': motivo}), 200
+
+        except Exception as e:
+            print(f"Erro no envio: {e}")
+            return jsonify({'status': 'erro_envio'}), 500
+
+    return jsonify({'status': 'acumulando', 'info': status_msg}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
