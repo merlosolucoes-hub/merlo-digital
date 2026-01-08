@@ -1,11 +1,12 @@
 import os
-import resend
-import requests
 import csv
+import requests
+import resend
 from io import StringIO
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
-from dotenv import load_dotenv
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
+from user_agents import parse
 
 load_dotenv()
 
@@ -13,37 +14,40 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave_dev_padrao')
 resend.api_key = os.getenv('RESEND_API_KEY')
 
-# --- VARIÁVEIS GLOBAIS (MEMÓRIA RAM) ---
-# Buffer de Cliques
 BUFFER_CLIQUES = []
-LIMITE_BUFFER_IMEDIATO = 10  # Se der 10 cliques, envia na hora, não espera o cron
-
-# Cache do Portfólio (Para o site não travar carregando planilha)
+LIMITE_BUFFER_IMEDIATO = 10
 PORTFOLIO_CACHE = []
 ULTIMA_ATUALIZACAO_PORTFOLIO = None
-CACHE_TIMEOUT_HORAS = 1  # Validade do cache em uso normal
+CACHE_TIMEOUT_HORAS = 1
+MEUS_IPS_IGNORADOS = ['192.168.0.101', '192']
+HOST_URL = "https://merlodigital.com"
 
+def get_location_from_ip(ip_address):
+    try:
+        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=1)
+        data = response.json()
+        if data['status'] == 'success':
+            return f"{data['city']}/{data['regionName']} ({data['countryCode']})"
+        return "Local Desconhecido"
+    except:
+        return "N/A"
 
-# --- FUNÇÃO INTELIGENTE DE PORTFÓLIO ---
 def get_portfolio_data(force_refresh=False):
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
-
     agora = datetime.now()
 
-    # 1. Verifica se pode usar o Cache (Se não for forçado e se o cache for recente)
     if not force_refresh and PORTFOLIO_CACHE and ULTIMA_ATUALIZACAO_PORTFOLIO:
         tempo_passado = agora - ULTIMA_ATUALIZACAO_PORTFOLIO
         if tempo_passado < timedelta(hours=CACHE_TIMEOUT_HORAS):
             return PORTFOLIO_CACHE
 
-    # 2. Se precisar buscar dados novos (Force Refresh ou Cache Vencido)
     url = os.getenv('PORTFOLIO_SHEET_URL')
     if not url:
         return []
 
     try:
-        print("🔄 Buscando dados atualizados no Google Sheets...")
-        response = requests.get(url, timeout=10)  # Timeout para não travar o server
+        print("Buscando dados atualizados no Google Sheets...")
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
 
         csv_file = StringIO(response.content.decode('utf-8'))
@@ -54,19 +58,73 @@ def get_portfolio_data(force_refresh=False):
             clean_row = {k.strip(): v.strip() for k, v in row.items()}
             projects.append(clean_row)
 
-        # Atualiza a memória global
         PORTFOLIO_CACHE = projects
         ULTIMA_ATUALIZACAO_PORTFOLIO = agora
-        print(f"✅ Portfólio atualizado! {len(projects)} projetos carregados.")
+        print(f"Portfólio atualizado! {len(projects)} projetos carregados.")
 
         return projects
     except Exception as e:
-        print(f"❌ Erro ao buscar portfólio: {e}")
-        # Em caso de erro, retorna o que tiver no cache antigo para o site não quebrar
+        print(f"Erro ao buscar portfólio: {e}")
         return PORTFOLIO_CACHE if PORTFOLIO_CACHE else []
 
+def enviar_buffer_por_email(motivo):
+    global BUFFER_CLIQUES
+    email_destino = os.getenv('EMAIL_DESTINO')
 
-# --- ROTAS DO SITE (FRONT-END) ---
+    if not BUFFER_CLIQUES:
+        return False
+
+    itens_html = ""
+    for item in BUFFER_CLIQUES:
+        local = get_location_from_ip(item['ip'])
+        cor_titulo = "#16305D"
+        if "WhatsApp" in item['botao'] or "Contato" in item['botao']:
+            cor_titulo = "#25D366"
+
+        itens_html += f"""
+        <li style="margin-bottom: 15px; border-left: 4px solid {cor_titulo}; padding-left: 10px; list-style: none;">
+            <div style="font-size: 14px; font-weight: bold; color: {cor_titulo};">
+                {item['botao']}
+            </div>
+            <div style="font-size: 12px; color: #555; line-height: 1.5;">
+                🕒 {item['hora_fmt']} <br>
+                🌍 <strong>{local}</strong> <span style="color:#999">IP: {item['ip']}</span> <br>
+                🔧 {item['device_str']} <br>
+                🔗 {item['pagina']} &rarr; {item['destino']}
+            </div>
+        </li>
+        <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
+        """
+
+    try:
+        resend.Emails.send({
+            "from": "Merlô Tracker <merlotracker@merlodigital.com>",
+            "to": [email_destino],
+            "subject": f"🎯 {len(BUFFER_CLIQUES)} Novos Leads/Cliques no Site",
+            "html": f"""
+            <div style="font-family: sans-serif; color: #333; max-width: 600px;">
+                <h3 style="color: #16305D; border-bottom: 2px solid #16305D; padding-bottom: 10px;">
+                    Relatório de Tráfego
+                </h3>
+                <p style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-size: 12px;">
+                    <strong>Status:</strong> {motivo}<br>
+                    <strong>Filtro:</strong> Robôs e IPs internos ignorados.
+                </p>
+                <ul style="padding: 0;">
+                    {itens_html}
+                </ul>
+                <div style="text-align: center; margin-top: 20px; font-size: 11px; color: #aaa;">
+                    Merlô Digital Intelligence System v2.0
+                </div>
+            </div>
+            """
+        })
+        print(f"Relatório enviado com sucesso!")
+        BUFFER_CLIQUES.clear()
+        return True
+    except Exception as e:
+        print(f"Erro no envio: {e}")
+        return False
 
 @app.route('/')
 def index():
@@ -76,7 +134,6 @@ def index():
         description="Especialistas em desenvolvimento web de alta performance. Transformamos processos complexos em sistemas seguros e escaláveis com Python."
     )
 
-
 @app.route('/servicos')
 def servicos():
     return render_template(
@@ -84,7 +141,6 @@ def servicos():
         title="Serviços de Desenvolvimento Web - Merlô Digital",
         description="Conheça nossas soluções em criação de sites, sistemas web, automação e dashboards administrativos personalizados."
     )
-
 
 @app.route('/servicos/website')
 def servicos_website():
@@ -94,7 +150,6 @@ def servicos_website():
         description="Sites rápidos, otimizados para SEO e responsivos. Do site institucional básico até catálogos dinâmicos integrados ao Google Sheets."
     )
 
-
 @app.route('/servicos/sistemas')
 def servicos_sistemas():
     return render_template(
@@ -103,10 +158,8 @@ def servicos_sistemas():
         description="Sistemas sob medida em Python. Dashboards, controle de estoque, área de membros e automação de processos empresariais."
     )
 
-
 @app.route('/portfolio')
 def portfolio():
-    # Usa a função inteligente com cache
     projects = get_portfolio_data()
     return render_template(
         'portfolio.html',
@@ -114,7 +167,6 @@ def portfolio():
         description="Veja nossos casos de sucesso. Sites institucionais e sistemas complexos desenvolvidos para gerar resultados reais.",
         projects=projects
     )
-
 
 @app.route('/contato', methods=['GET', 'POST'])
 def contato():
@@ -153,63 +205,72 @@ def contato():
         description="Entre em contato com a Merlô Digital. Atendimento via WhatsApp ou E-mail para tirar seu projeto do papel."
     )
 
-
-# --- ROTAS DE API E CRON JOB (BACK-END) ---
-
 @app.route('/api/track-click', methods=['POST'])
 def track_click():
-    """
-    Recebe o clique do usuário e apenas guarda no Buffer.
-    O envio é feito ou se encher muito (10 cliques) ou pelo Cron Job (10 min).
-    """
     global BUFFER_CLIQUES
+
+    if request.headers.getlist("X-Forwarded-For"):
+        user_ip = request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        user_ip = request.remote_addr
+
+    ua_string = request.headers.get('User-Agent')
+    user_agent = parse(ua_string)
+
+    if user_agent.is_bot:
+        return jsonify({'status': 'ignorado', 'motivo': 'eh_robo'}), 200
+
+    if user_ip in MEUS_IPS_IGNORADOS:
+        return jsonify({'status': 'ignorado', 'motivo': 'eh_o_dono'}), 200
+
+    dispositivo = f"{user_agent.os.family} {user_agent.os.version_string}"
+    navegador = f"{user_agent.browser.family}"
+
+    icone = "💻"
+    if user_agent.is_mobile:
+        icone = "📱"
+    elif user_agent.is_tablet:
+        icone = "📟"
+
+    origem = request.headers.get('Referer')
+    if not origem or HOST_URL in origem:
+        origem_fmt = "Acesso Direto / Navegação Interna"
+    else:
+        origem_fmt = f"Veio de: {origem}"
 
     data = request.get_json()
     hora_atual = datetime.now()
 
     novo_clique = {
-        "botao": data.get('botao', 'Desconhecido'),
+        "botao": data.get('botao', 'Clique Genérico'),
         "pagina": data.get('pagina_origem', '/'),
         "destino": data.get('url_destino', '#'),
-        "hora_fmt": hora_atual.strftime("%d/%m/%Y às %H:%M:%S")
+        "hora_fmt": hora_atual.strftime("%H:%M:%S (%d/%m)"),
+        "ip": user_ip,
+        "device_str": f"{icone} {navegador} no {dispositivo}",
+        "origem": origem_fmt
     }
 
     BUFFER_CLIQUES.append(novo_clique)
 
-    # Se o buffer estourar o limite de segurança (ex: muito tráfego), envia agora mesmo
-    # para não perder dados na memória RAM.
     if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
-        enviar_buffer_por_email(motivo="Buffer Cheio (Envio Imediato)")
+        enviar_buffer_por_email(motivo="Buffer Cheio (Alta Demanda)")
         return jsonify({'status': 'enviado', 'motivo': 'buffer_cheio'}), 200
 
     return jsonify({'status': 'acumulando', 'qtd': len(BUFFER_CLIQUES)}), 200
 
-
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
-    """
-    ROTA MÁGICA:
-    Essa rota deve ser chamada por um serviço externo (ex: cron-job.org) a cada 10 minutos.
-    Ela serve para:
-    1. Manter o Render ACORDADO (Keep-Alive).
-    2. Enviar e-mails de cliques acumulados se houver.
-    3. Se não houver cliques, atualizar o Cache do Portfólio (Refresh).
-    """
     global BUFFER_CLIQUES
+    print(f"Cron Job acionado em {datetime.now()}")
 
-    print(f"⏰ Cron Job acionado em {datetime.now()}")
-
-    # CENÁRIO 1: TEM CLIQUES? ENVIA E-MAIL.
     if len(BUFFER_CLIQUES) > 0:
         sucesso = enviar_buffer_por_email(motivo="Cron Job (10 min)")
         if sucesso:
             return jsonify({'status': 'ok', 'acao': 'email_enviado', 'qtd': len(BUFFER_CLIQUES)}), 200
         else:
             return jsonify({'status': 'erro', 'acao': 'falha_envio_email'}), 500
-
-    # CENÁRIO 2: NÃO TEM CLIQUES? ATUALIZA O CACHE (Puxa e Enche).
     else:
-        # Força a atualização do cache (force_refresh=True)
         projetos = get_portfolio_data(force_refresh=True)
         return jsonify({
             'status': 'ok',
@@ -218,54 +279,8 @@ def cron_job():
             'projetos_carregados': len(projetos)
         }), 200
 
-
-def enviar_buffer_por_email(motivo):
-    """Função auxiliar que faz o envio real do e-mail"""
-    global BUFFER_CLIQUES
-
-    email_destino = os.getenv('EMAIL_DESTINO')
-
-    # Monta lista HTML
-    itens_html = ""
-    for item in BUFFER_CLIQUES:
-        itens_html += f"""
-        <li style="margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">
-            <small style="color:#666">{item['hora_fmt']}</small><br>
-            <strong>{item['botao']}</strong> <br>
-            <span style="font-size:0.85em">De: {item['pagina']} &rarr; Para: {item['destino']}</span>
-        </li>
-        """
-
-    try:
-        resend.Emails.send({
-            "from": "Merlô Tracker <merlotracker@merlodigital.com>",
-            "to": [email_destino],
-            "subject": f"📊 Relatório de Tráfego: {len(BUFFER_CLIQUES)} novos cliques",
-            "html": f"""
-            <div style="font-family: sans-serif; color: #333;">
-                <h3 style="color: #16305D;">Atualização de Tráfego</h3>
-                <p><strong>Motivo do envio:</strong> {motivo}</p>
-                <ul style="list-style: none; padding: 0;">
-                    {itens_html}
-                </ul>
-                <hr>
-                <small>Sistema de Monitoramento Merlô Digital.</small>
-            </div>
-            """
-        })
-        print(f"📧 E-mail de relatório enviado! Motivo: {motivo}")
-        BUFFER_CLIQUES.clear()  # Limpa o buffer após sucesso
-        return True
-    except Exception as e:
-        print(f"❌ Erro no envio do relatório: {e}")
-        return False
-
-
-# --- ROTAS DE SEO (SITEMAP E ROBOTS) ---
-
 @app.route('/sitemap.xml')
 def sitemap():
-    host = "https://merlodigital.com"
     pages = ['/', '/servicos', '/servicos/website', '/servicos/sistemas', '/portfolio', '/contato']
 
     sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
@@ -274,7 +289,7 @@ def sitemap():
     for page in pages:
         sitemap_xml += f"""
         <url>
-            <loc>{host}{page}</loc>
+            <loc>{HOST_URL}{page}</loc>
             <changefreq>monthly</changefreq>
             <priority>{'1.0' if page == '/' else '0.8'}</priority>
         </url>"""
@@ -285,14 +300,12 @@ def sitemap():
     response.headers["Content-Type"] = "application/xml"
     return response
 
-
 @app.route('/robots.txt')
 def robots():
-    lines = ["User-agent: *", "Disallow: ", "Sitemap: https://merlodigital.com/sitemap.xml"]
+    lines = ["User-agent: *", "Disallow: ", f"Sitemap: {HOST_URL}/sitemap.xml"]
     response = make_response("\n".join(lines))
     response.headers["Content-Type"] = "text/plain"
     return response
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
