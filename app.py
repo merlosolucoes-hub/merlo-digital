@@ -307,5 +307,13 @@ def robots():
     response.headers["Content-Type"] = "text/plain"
     return response
 
+@app.route('/termos&privacidade')
+def termos():
+    return render_template(
+        'termos&privacidade.html',
+        title="Termos de Uso e Privacidade | Merlô Digital",
+        description="Transparência total. Nossas políticas de privacidade, LGPD e termos de serviço."
+    )
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

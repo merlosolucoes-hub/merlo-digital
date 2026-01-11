@@ -1,54 +1,405 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h2>O Que Desenvolvemos</h2>
-        <p class="text-muted">Soluções tecnológicas focadas no crescimento da sua empresa.</p>
+
+<div class="services-header position-relative overflow-hidden">
+    <div class="container position-relative z-2 h-100 d-flex flex-column justify-content-center">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <span class="badge bg-info text-dark mb-3 px-3 py-2 rounded-pill fw-bold fade-in-up">SOLUÇÕES DIGITAIS</span>
+                <h1 class="display-4 fw-bold text-white mb-3 fade-in-up delay-1">Engenharia de Software <br><span class="text-gradient">de Ponta a Ponta</span></h1>
+                <p class="lead text-muted fade-in-up delay-2 mx-auto" style="max-width: 700px;">
+                    Não entregamos apenas código. Entregamos infraestrutura digital robusta, segura e escalável para empresas que buscam liderança de mercado.
+                </p>
+
+                <div class="mt-4 fade-in-up delay-3">
+                    <a href="#websites" class="btn btn-outline-light rounded-pill btn-sm px-4 me-2">Websites</a>
+                    <a href="#sistemas" class="btn btn-outline-light rounded-pill btn-sm px-4">Sistemas</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="contact-glow" style="top: -60%; left: 50%; transform: translateX(-50%);"></div>
+</div>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="service-card d-flex flex-column h-100">
-                <i class="bi bi-laptop icon-box"></i>
-                <h4>Websites Corporativos</h4>
-                <p class="text-muted mt-3 flex-grow-1">
-                    A vitrine digital da sua empresa. Foco em autoridade e conversão.
-                </p>
-                <ul class="list-unstyled text-muted mb-4">
-                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Design Responsivo e Moderno</li>
-                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Otimização para Google (SEO)</li>
-                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Painel administrativo fácil</li>
-                </ul>
-                <a href="{{ url_for('servicos_website') }}" class="btn btn-merlo w-100 mt-auto">Ver Planos de Sites</a>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="service-card d-flex flex-column h-100">
-                <i class="bi bi-hdd-network icon-box"></i>
-                <h4>Sistemas Web</h4>
-                <p class="text-muted mt-3 flex-grow-1">
-                    Ferramentas sob medida para automação e gestão de processos.
-                </p>
-                <ul class="list-unstyled text-muted mb-4">
-                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Dashboards Administrativos</li>
-                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> Automação de Processos</li>
-                    <li class="mb-2"><i class="bi bi-check-circle text-info"></i> ERPs Dedicados</li>
-                </ul>
-                <a href="{{ url_for('servicos_sistemas') }}" class="btn btn-merlo w-100 mt-auto">Conhecer Soluções</a>
-            </div>
-        </div>
-
-        <div class="col-12 mt-5">
-            <div class="p-4 border border-secondary rounded bg-dark">
-                <h5><i class="bi bi-code-slash text-warning"></i> Nossa Stack Tecnológica</h5>
-                <p class="mb-0 text-muted">
-                    Todo o nosso desenvolvimento é feito em <strong>Python</strong>.
-                    Isso garante um código limpo, manutenção simplificada e segurança de nível empresarial.
-                </p>
-            </div>
-        </div>
+<div class="bg-darker border-bottom border-secondary sticky-top py-3 d-none d-md-block" style="top: 70px; z-index: 99;">
+    <div class="container">
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a class="nav-link text-muted hover-white" href="#websites"><i class="bi bi-laptop me-2"></i>Websites & Portais</a></li>
+            <li class="nav-item"><a class="nav-link text-muted hover-white" href="#sistemas"><i class="bi bi-hdd-network me-2"></i>Sistemas & ERPs</a></li>
+            <li class="nav-item"><a class="nav-link text-muted hover-white" href="#tech"><i class="bi bi-code-slash me-2"></i>Tecnologia</a></li>
+            <li class="nav-item"><a class="nav-link text-muted hover-white" href="#processo"><i class="bi bi-diagram-3 me-2"></i>Processo</a></li>
+            <li class="nav-item"><a class="nav-link text-muted hover-white" href="#faq"><i class="bi bi-question-circle me-2"></i>Dúvidas</a></li>
+        </ul>
     </div>
 </div>
+
+<div class="layout-wrapper section-padding">
+
+    <section id="websites" class="py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 fade-in-up">
+                    <div class="service-detail-img position-relative">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop" alt="Desenvolvimento Web" class="img-fluid rounded-4 shadow-lg border border-secondary">
+                        <div class="floating-badge bg-dark border border-info text-white p-3 rounded-3 shadow-lg position-absolute bottom-0 end-0 m-4">
+                            <i class="bi bi-lightning-charge-fill text-warning"></i> Google PageSpeed: <strong>100</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 fade-in-up delay-1">
+                    <div class="ps-lg-4">
+                        <span class="text-info text-uppercase tracking-widest fw-bold small">Frontend & Experiência</span>
+                        <h2 class="mb-4 mt-2">Websites de Alta Performance</h2>
+                        <p class="text-muted mb-4">
+                            Algumas outras agências usam criadores de sites arrasta-e-solta que geram códigos sujos e lentos. Nós programamos linha a linha.
+                            O resultado? Sites que o Google ama, que carregam instantaneamente e convertem visitantes em clientes.                        </p>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-white mb-1">SEO Técnico Nativo</h6>
+                                        <p class="small text-muted mb-0">Tags, Schema.org e sitemaps configurados.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-white mb-1">Design Mobile-First</h6>
+                                        <p class="small text-muted mb-0">Navegação perfeita em qualquer celular.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-white mb-1">Merlô Tracking</h6>
+                                        <p class="small text-muted mb-0">Monitore cliques no WhatsApp em tempo real.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-white mb-1">Gestão via Planilha</h6>
+                                        <p class="small text-muted mb-0">Edite textos e preços pelo Google Sheets.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ url_for('servicos_website') }}" class="btn btn-merlo">
+                            Ver Planos de Sites <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container"><hr class="border-secondary opacity-25 my-5"></div>
+
+    <section id="sistemas" class="py-5">
+        <div class="container">
+            <div class="row align-items-center g-5 flex-row-reverse">
+                <div class="col-lg-6 fade-in-up">
+                    <div class="service-detail-img position-relative">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" alt="Sistemas Web" class="img-fluid rounded-4 shadow-lg border border-secondary">
+                        <div class="floating-badge bg-dark border border-info text-white p-3 rounded-3 shadow-lg position-absolute top-0 start-0 m-4">
+                            <i class="bi bi-lock-fill text-info"></i> Security: <strong>Enterprise</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 fade-in-up delay-1">
+                    <div class="pe-lg-4">
+                        <span class="text-info text-uppercase tracking-widest fw-bold small">Backend & Inteligência</span>
+                        <h2 class="mb-4 mt-2">Sistemas Web & ERPs</h2>
+                        <p class="text-muted mb-4">
+                            Sua empresa ainda depende de planilhas Excel lentas e descentralizadas? Desenvolvemos o "cérebro digital" do seu negócio.
+                            Criamos sistemas de gestão (ERP), CRMs, portais de membros e ferramentas de automação sob medida, 100% na nuvem.
+                        </p>
+
+                        <div class="feature-list mt-4">
+                            <div class="feature-item p-3 border border-secondary rounded bg-dark mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-database-fill-gear text-info fs-4 me-3"></i>
+                                    <div>
+                                        <h6 class="text-white mb-0">Arquitetura de Dados Robusta</h6>
+                                        <small class="text-muted">Bancos SQL otimizados para milhões de registros.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="feature-item p-3 border border-secondary rounded bg-dark mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-shield-lock-fill text-info fs-4 me-3"></i>
+                                    <div>
+                                        <h6 class="text-white mb-0">Controle de Acesso Granular</h6>
+                                        <small class="text-muted">Defina exatamente o que cada funcionário pode ver.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="feature-item p-3 border border-secondary rounded bg-dark mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-graph-up-arrow text-info fs-4 me-3"></i>
+                                    <div>
+                                        <h6 class="text-white mb-0">Dashboards em Tempo Real</h6>
+                                        <small class="text-muted">Gráficos e KPIs para tomada de decisão imediata.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ url_for('servicos_sistemas') }}" class="btn btn-outline-info mt-3">
+                            Conhecer Soluções de Sistema <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="py-5 bg-darker rounded-section my-5 mx-3 mx-lg-5 border border-secondary border-opacity-25">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="badge bg-secondary bg-opacity-25 text-white mb-3">NOSSA CAIXA DE FERRAMENTAS</span>
+                <h2 class="mb-3">Stack Tecnológica</h2>
+                <p class="text-muted">Utilizamos as tecnologias mais modernas do mercado para garantir longevidade e segurança ao seu projeto.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-12 col-md-3">
+                    <div class="tech-card text-center p-4 h-100">
+                        <i class="bi bi-filetype-py display-4 text-warning mb-3 d-block"></i>
+                        <h5 class="text-white">Python</h5>
+                        <p class="small text-muted mb-0">Linguagem base para lógica robusta e automação de dados.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <div class="tech-card text-center p-4 h-100">
+                        <i class="bi bi-braces display-4 text-white mb-3 d-block"></i>
+                        <h5 class="text-white">Flask / Django</h5>
+                        <p class="small text-muted mb-0">Frameworks web de alta velocidade e escalabilidade.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <div class="tech-card text-center p-4 h-100">
+                        <i class="bi bi-database display-4 text-info mb-3 d-block"></i>
+                        <h5 class="text-white">PostgreSQL</h5>
+                        <p class="small text-muted mb-0">Banco de dados relacional enterprise para integridade total.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <div class="tech-card text-center p-4 h-100">
+                        <i class="bi bi-cloud-check display-4 text-secondary mb-3 d-block"></i>
+                        <h5 class="text-white">Cloud Hosting</h5>
+                        <p class="small text-muted mb-0">Google Cloud / AWS / Render para 99.9% de uptime.</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <section id="processo" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="mb-3">Como Trabalhamos</h2>
+                <p class="text-muted">Metodologia ágil para entregar valor em semanas, não meses.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="process-card p-4 border border-secondary rounded bg-dark h-100 position-relative">
+                        <span class="process-number text-info opacity-25 position-absolute top-0 end-0 me-3 mt-2 display-1 fw-bold">1</span>
+                        <h5 class="text-white mt-3">Imersão & Briefing</h5>
+                        <p class="text-muted small">Entendemos a fundo a dor do seu negócio e definimos os requisitos técnicos.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="process-card p-4 border border-secondary rounded bg-dark h-100 position-relative">
+                        <span class="process-number text-info opacity-25 position-absolute top-0 end-0 me-3 mt-2 display-1 fw-bold">2</span>
+                        <h5 class="text-white mt-3">Design & Prototipagem</h5>
+                        <p class="text-muted small">Criamos o visual e a experiência do usuário (UX) antes de escrever o código.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="process-card p-4 border border-secondary rounded bg-dark h-100 position-relative">
+                        <span class="process-number text-info opacity-25 position-absolute top-0 end-0 me-3 mt-2 display-1 fw-bold">3</span>
+                        <h5 class="text-white mt-3">Desenvolvimento</h5>
+                        <p class="text-muted small">Programação robusta em Python, integração de APIs e configuração de banco de dados.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="process-card p-4 border border-secondary rounded bg-dark h-100 position-relative border-info">
+                        <span class="process-number text-info opacity-25 position-absolute top-0 end-0 me-3 mt-2 display-1 fw-bold">4</span>
+                        <h5 class="text-white mt-3">Deploy & Escala</h5>
+                        <p class="text-muted small">Publicação em servidor seguro, testes finais e treinamento da sua equipe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-6">
+                    <h2 class="mb-3">Setores que Transformamos</h2>
+                    <p class="text-muted">A tecnologia da Merlô Digital é versátil e se adapta às regras de negócio de diversos nichos.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="sector-card">
+                        <div class="sector-icon"><i class="bi bi-heart-pulse"></i></div>
+                        <h4>Saúde & Clínicas</h4>
+                        <p>Agendamento online, portais de pacientes e sites institucionais para médicos.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sector-card">
+                        <div class="sector-icon"><i class="bi bi-building"></i></div>
+                        <h4>Imobiliário</h4>
+                        <p>Catálogos dinâmicos de imóveis integrados com planilhas de gestão.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sector-card">
+                        <div class="sector-icon"><i class="bi bi-cart4"></i></div>
+                        <h4>Varejo & E-commerce</h4>
+                        <p>Vitrines digitais leves e sistemas de controle de estoque simplificados.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sector-card">
+                        <div class="sector-icon"><i class="bi bi-briefcase"></i></div>
+                        <h4>Corporativo & B2B</h4>
+                        <p>Sites institucionais de autoridade para indústrias e consultorias.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sector-card">
+                        <div class="sector-icon"><i class="bi bi-mortarboard"></i></div>
+                        <h4>Educação</h4>
+                        <p>Áreas de alunos, venda de cursos e portais de conteúdo exclusivos.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sector-card">
+                        <div class="sector-icon"><i class="bi bi-cup-hot"></i></div>
+                        <h4>Gastronomia</h4>
+                        <p>Cardápios digitais QR Code editáveis pelo celular do gerente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-5 bg-darker border-top border-secondary">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center mb-5">
+                    <h2>Perguntas Frequentes</h2>
+                    <p class="text-muted">Tire suas dúvidas técnicas antes de iniciar.</p>
+                </div>
+                <div class="col-lg-8">
+                    <div class="accordion accordion-flush" id="faqServices">
+
+                        <div class="accordion-item bg-transparent border-bottom border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                                    O que está incluso na manutenção mensal?
+                                </button>
+                            </h2>
+                            <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqServices">
+                                <div class="accordion-body text-muted">
+                                    Nossa manutenção opcional (R$ 50/mês) é um seguro de vida para seu site. Inclui hospedagem cloud de alta performance, certificado SSL (https), monitoramento 24/7 contra quedas e acesso aos relatórios do Merlô Tracking.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-transparent border-bottom border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#q2">
+                                    Posso atualizar o conteúdo do site sozinho?
+                                </button>
+                            </h2>
+                            <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqServices">
+                                <div class="accordion-body text-muted">
+                                    Sim! Nos planos "Standard Plus" e "Sistemas", integramos o site com o Google Sheets ou um Painel Administrativo Próprio. Você altera um texto ou preço na planilha e o site atualiza instantaneamente. Sem necessidade de saber programação.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-transparent border-bottom border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#q3">
+                                    O site é meu ou da agência?
+                                </button>
+                            </h2>
+                            <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqServices">
+                                <div class="accordion-body text-muted">
+                                    O código é <strong>propriedade sua</strong>. Após a quitação do valor de desenvolvimento, você tem total liberdade. Não prendemos clientes com contratos abusivos; eles permanecem conosco pela qualidade do serviço e do suporte.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-transparent border-bottom border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#q4">
+                                    Quanto tempo leva para desenvolver?
+                                </button>
+                            </h2>
+                            <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqServices">
+                                <div class="accordion-body text-muted">
+                                    Sites institucionais profissionais levam em média de 5 a 15 dias úteis. Landing Pages podem ser entregues em até 3 dias. Sistemas complexos (ERPs/Dashboards) dependem do escopo, variando geralmente de 30 a 90 dias.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 text-center">
+        <div class="container pt-4">
+            <div class="cta-box p-5 rounded-4 border border-info border-opacity-25 shadow-neon" style="background: linear-gradient(45deg, var(--bg-darker), #0b1a38);">
+                <h2 class="display-6 fw-bold mb-3">Pronto para digitalizar seu negócio?</h2>
+                <p class="lead text-muted mb-4">Converse com nossos engenheiros e receba uma proposta técnica sem compromisso.</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{{ url_for('contato') }}" class="btn btn-merlo btn-lg px-5">
+                        Solicitar Orçamento
+                    </a>
+                    <a href="https://wa.me/5547992539750" target="_blank" class="btn btn-merlo btn-lg px-5">
+                        Chamar no WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
 {% endblock %}

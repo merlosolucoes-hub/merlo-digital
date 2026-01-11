@@ -1,12 +1,9 @@
 :root {
-    /* --- Paleta Definida pela Merlô Digital --- */
-    --brand-primary: #16305D;    /* Azul Profundo (Fundo Principal) */
-    --text-main: #DFE2E6;        /* Texto Claro (Contraste alto) */
-    --text-muted: #BEC4CC;       /* Texto Secundário (Cinza azulado) */
-
-    /* --- Cores Derivadas para Interface --- */
-    --bg-darker: #0f2242;        /* Um tom mais escuro para Navbar/Cards */
-    --accent-highlight: #4facfe; /* Um azul elétrico suave para detalhes/botões */
+    --brand-primary: #16305D;
+    --text-main: #DFE2E6;
+    --text-muted: #BEC4CC;
+    --bg-darker: #0f2242;
+    --accent-highlight: #4facfe;
     --white: #ffffff;
 }
 
@@ -24,28 +21,53 @@ h1, h2, h3, h4, h5 {
     font-weight: 700;
 }
 
-a { text-decoration: none; }
-
-/* --- Navbar --- */
-.navbar {
-    background-color: rgba(15, 34, 66, 0.95) !important; /* --bg-darker com transparência */
-    border-bottom: 1px solid rgba(190, 196, 204, 0.1);   /* Borda sutil usando a cor secundária */
-    backdrop-filter: blur(10px);
+a {
+    text-decoration: none;
 }
 
 .layout-wrapper {
     width: 100%;
     max-width: 100vw;
-    overflow-x: hidden; /* Corta qualquer vazamento */
+    overflow-x: hidden;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-info {
+    color: var(--accent-highlight) !important;
+}
+
+.border-secondary {
+    border-color: rgba(190, 196, 204, 0.2) !important;
+}
+
+.bg-dark {
+    background-color: var(--bg-darker) !important;
+}
+
+.navbar {
+    background-color: rgba(15, 34, 66, 0.95) !important;
+    border-bottom: 1px solid rgba(190, 196, 204, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+}
+
+.navbar-scrolled {
+    background-color: rgba(11, 26, 56, 0.98) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 
 .navbar-brand {
-    font-family: 'Nunito', sans-serif; /* Aplica a fonte Nunito */
+    font-family: 'Nunito', sans-serif;
     font-size: 1.9rem;
-    font-weight: 700; /* Negrito */
+    font-weight: 700;
     color: var(--text-main) !important;
-    letter-spacing: -0.5px; /* Um leve ajuste para ficar mais compacto e moderno */
-    text-transform: lowercase; /* Força o minúsculo */
+    letter-spacing: -0.5px;
+    text-transform: lowercase;
     display: flex;
     align-items: center;
 }
@@ -62,7 +84,18 @@ a { text-decoration: none; }
     text-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
-/* --- Hero Section (Home) --- */
+.top-bar {
+    background-color: #0b1a38;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 8px 0;
+    font-size: 0.85rem;
+}
+
+.hover-white:hover {
+    color: var(--white) !important;
+    transition: 0.3s;
+}
+
 .hero-section {
     padding: 100px 0;
     text-align: center;
@@ -82,7 +115,37 @@ a { text-decoration: none; }
     line-height: 1.6;
 }
 
-/* Botão Principal - Estilo "Ghost" refinado */
+.hero-badge {
+    display: inline-block;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: var(--accent-highlight);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.text-gradient {
+    background: linear-gradient(90deg, #ffffff, var(--accent-highlight));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(79, 172, 254, 0.15) 0%, rgba(0,0,0,0) 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
 .btn-merlo {
     background-color: transparent;
     border: 2px solid var(--text-main);
@@ -99,9 +162,84 @@ a { text-decoration: none; }
     box-shadow: 0 0 15px rgba(223, 226, 230, 0.3);
 }
 
-/* --- Cards (Serviços e Infos) --- */
+.btn-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px 0;
+    font-size: 0.7rem;
+    background-color: var(--accent-highlight);
+    color: var(--brand-primary);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 50px;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);
+}
+
+.btn-pricing:hover {
+    background-color: var(--white);
+    color: var(--brand-primary);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+    text-decoration: none;
+}
+
+.btn-pricing.outline {
+    background-color: transparent;
+    border: 2px solid var(--accent-highlight);
+    color: var(--accent-highlight);
+    box-shadow: none;
+}
+
+.btn-pricing.outline:hover {
+    background-color: var(--accent-highlight);
+    color: var(--brand-primary);
+}
+
+.btn-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    background-color: transparent;
+    color: var(--accent-highlight);
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 2px solid var(--accent-highlight);
+    padding: 12px;
+    border-radius: 50px;
+    transition: 0.3s;
+}
+
+.btn-link:hover {
+    background: var(--accent-highlight);
+    color: var(--brand-primary);
+    text-decoration: none;
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: rgba(255,255,255,0.1);
+    color: var(--text-muted);
+}
+
+.btn-icon:hover {
+    background-color: var(--accent-highlight);
+    border-color: var(--accent-highlight);
+    color: var(--brand-primary);
+}
+
 .service-card, .contact-info-box {
-    background-color: var(--bg-darker); /* Fundo um pouco mais escuro para destacar do body */
+    background-color: var(--bg-darker);
     border: 1px solid rgba(190, 196, 204, 0.1);
     padding: 30px;
     border-radius: 8px;
@@ -116,147 +254,40 @@ a { text-decoration: none; }
 
 .icon-box {
     font-size: 2.5rem;
-    color: var(--text-main); /* Ícones na cor clara */
+    color: var(--text-main);
     margin-bottom: 20px;
     opacity: 0.9;
 }
 
-/* --- Formulários --- */
-.form-control {
-    background-color: rgba(22, 48, 93, 0.5); /* Fundo misturado com a cor principal */
-    border: 1px solid var(--text-muted);
-    color: var(--white);
-    border-radius: 5px;
+.feature-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    transition: 0.3s;
 }
 
-.form-control::placeholder {
-    color: rgba(190, 196, 204, 0.5);
+.feature-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-5px);
+    border-color: var(--accent-highlight);
 }
 
-.form-control:focus {
-    background-color: var(--bg-darker);
-    border-color: var(--white);
-    color: var(--white);
-    box-shadow: none; /* Remove o brilho padrão do bootstrap */
+.highlight-border {
+    border-color: rgba(79, 172, 254, 0.3);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(79, 172, 254, 0.05) 100%);
 }
 
-/* --- Footer --- */
-footer {
-    background-color: var(--bg-darker);
-    padding: 40px 0;
-    margin-top: auto;
-    border-top: 1px solid rgba(190, 196, 204, 0.1);
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-/* --- Utilitários de Texto --- */
-.text-muted {
-    color: var(--text-muted) !important;
-}
-
-.text-info {
-    color: var(--accent-highlight) !important; /* Detalhes pequenos em azul claro */
-}
-
-/* Ajuste nas bordas do Bootstrap */
-.border-secondary {
-    border-color: rgba(190, 196, 204, 0.2) !important;
-}
-
-.bg-dark {
-    background-color: var(--bg-darker) !important;
-}
-
-/* --- Botão Flutuante WhatsApp --- */
-.whatsapp-float {
-    position: fixed;
+.icon-circle {
     width: 60px;
     height: 60px;
-    bottom: 25px;
-    right: 25px;
-    background-color: #25d366; /* Verde Oficial do WhatsApp */
-    color: #FFF;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 50%;
-    text-align: center;
-    font-size: 30px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    z-index: 9999; /* Garante que fique por cima de tudo */
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    text-decoration: none; /* Remove sublinhado se houver */
+    font-size: 1.5rem;
 }
 
-/* Efeito ao passar o mouse */
-.whatsapp-float:hover {
-    background-color: #128c7e; /* Verde mais escuro */
-    color: #FFF;
-    transform: scale(1.1); /* Aumenta levemente */
-    box-shadow: 0px 6px 15px rgba(0, 240, 255, 0.3); /* Brilho neon sutil da sua marca */
-}
-
-/* --- Portfólio Styles --- */
-.portfolio-img-wrapper {
-    height: 180px; /* Altura fixa para alinhar os cards */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.portfolio-logo {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain; /* Garante que a logo não distorça */
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-}
-
-.placeholder-logo {
-    font-size: 3rem;
-    color: var(--text-muted);
-    opacity: 0.3;
-}
-
-/* Ajuste no badge para combinar com o tema escuro */
-.badge.bg-info {
-    background-color: var(--accent-highlight) !important;
-    color: var(--brand-primary) !important;
-    font-weight: 700;
-}
-
-
-/* ==========================================================================
-   NOVOS ESTILOS (SERVIÇOS, PREÇOS E TABELAS)
-   Adicionados respeitando o tema Dark Blue
-   ========================================================================== */
-
-/* Cabeçalho das páginas internas */
-.page-header {
-    padding: 60px 0 40px 0;
-    text-align: center;
-    background-color: var(--bg-darker);
-    border-bottom: 1px solid rgba(190, 196, 204, 0.1);
-    margin-bottom: 40px;
-}
-
-.page-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: var(--white);
-}
-
-.page-header p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-}
-
-/* --- GRID DE PREÇOS --- */
 .pricing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -265,10 +296,10 @@ footer {
 }
 
 .pricing-card {
-    background-color: var(--bg-darker); /* Fundo escuro igual ao do serviço */
+    background-color: var(--bg-darker);
     padding: 40px 30px;
     border-radius: 15px;
-    border: 1px solid rgba(190, 196, 204, 0.1); /* Borda sutil */
+    border: 1px solid rgba(190, 196, 204, 0.1);
     text-align: center;
     position: relative;
     transition: transform 0.3s, border-color 0.3s;
@@ -277,21 +308,17 @@ footer {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-
-
 .pricing-card:hover {
     transform: translateY(-5px);
-    border-color: var(--accent-highlight); /* Azul elétrico no hover */
+    border-color: var(--accent-highlight);
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-/* Destaque para o Standard Plus */
 .pricing-card.plus {
     border: 2px solid var(--accent-highlight);
     background: linear-gradient(to bottom, var(--bg-darker), rgba(79, 172, 254, 0.1));
 }
 
-/* Etiqueta (Badge) nos Cards */
 .pricing-card .badge {
     position: absolute;
     top: -12px;
@@ -312,7 +339,6 @@ footer {
     color: var(--white);
 }
 
-/* Tipografia dos Cards */
 .pricing-card h3 {
     font-family: 'Nunito', sans-serif;
     font-size: 1.8rem;
@@ -341,14 +367,12 @@ footer {
     font-weight: 400;
 }
 
-/* Ajuste específico para "Sob Consulta" */
 .pricing-card .price.price-text {
     font-size: 1.5rem;
     color: var(--accent-highlight);
     margin-top: 15px;
 }
 
-/* Listas dentro dos Cards */
 .pricing-card ul {
     text-align: left;
     margin-bottom: 30px;
@@ -368,28 +392,110 @@ footer {
     margin-right: 10px;
 }
 
-/* Botão Link nos cards */
-.btn-link {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    background-color: transparent;
-    color: var(--accent-highlight);
-    font-weight: 700;
-    text-transform: uppercase;
-    border: 2px solid var(--accent-highlight);
-    padding: 12px;
-    border-radius: 50px;
-    transition: 0.3s;
+.optionals-box {
+    background-color: rgba(15, 34, 66, 0.6);
+    border: 1px dashed rgba(190, 196, 204, 0.3);
+    padding: 30px;
+    border-radius: 15px;
 }
 
-.btn-link:hover {
-    background: var(--accent-highlight);
-    color: var(--brand-primary);
+.optionals-box h4 {
+    color: var(--white);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.form-control {
+    background-color: rgba(22, 48, 93, 0.5);
+    border: 1px solid var(--text-muted);
+    color: var(--white);
+    border-radius: 5px;
+}
+
+.form-control::placeholder {
+    color: rgba(190, 196, 204, 0.5);
+}
+
+.form-control:focus {
+    background-color: var(--bg-darker);
+    border-color: var(--white);
+    color: var(--white);
+    box-shadow: none;
+}
+
+footer {
+    background-color: #0b1a38;
+    padding: 40px 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(190, 196, 204, 0.1);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.footer-bg-glow {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(79, 172, 254, 0.05) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: var(--text-muted);
     text-decoration: none;
+    transition: 0.3s;
+    font-size: 0.95rem;
+    display: inline-block;
 }
 
-/* --- TABELA COMPARATIVA DARK --- */
+.footer-links a:hover {
+    color: var(--accent-highlight);
+    transform: translateX(5px);
+}
+
+.page-header {
+    margin-bottom: 0 !important;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 60px 0 40px 0;
+    text-align: center;
+    background-color: var(--bg-darker);
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--white);
+}
+
+.page-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.section-padding {
+    padding-top: 60px;
+}
+
+.custom-separator {
+    border-left: 1px solid rgba(190, 196, 204, 0.2);
+}
+
+@media (max-width: 768px) {
+    .custom-separator {
+        border-left: none !important;
+        border-top: 1px solid rgba(190, 196, 204, 0.2);
+        padding-top: 30px;
+        margin-top: 30px;
+    }
+}
+
 .comparison-section {
     margin-top: 60px;
     margin-bottom: 60px;
@@ -440,91 +546,726 @@ footer {
     background-color: rgba(255, 255, 255, 0.02);
 }
 
-/* --- NOVOS BOTÕES DE PREÇO (Highlight) --- */
-.btn-pricing {
+.floating-group {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-float {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px 0;
-    font-size: 0.7rem;
-
-    /* Estilo Visual */
-    background-color: var(--accent-highlight);
-    color: var(--brand-primary); /* Texto escuro para contraste */
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-radius: 50px;
-    border: none;
-
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.btn-pricing:hover {
-    background-color: var(--white);
+.btn-whatsapp {
+    background-color: #25d366;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe57;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-scroll-top {
+    background-color: var(--bg-darker);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    width: 45px;
+    height: 45px;
+}
+
+.btn-scroll-top.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.btn-scroll-top:hover {
+    background-color: var(--accent-highlight);
     color: var(--brand-primary);
-    transform: scale(1.05); /* Leve aumento */
-    box-shadow: 0 0 20px rgba(79, 172, 254, 0.6); /* Efeito Glow */
+}
+
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 25px;
+    right: 25px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
     text-decoration: none;
 }
 
-/* Variação Outline para o botão Pro */
-.btn-pricing.outline {
-    background-color: transparent;
-    border: 2px solid var(--accent-highlight);
-    color: var(--accent-highlight);
-    box-shadow: none;
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    color: #FFF;
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(0, 240, 255, 0.3);
 }
 
-.btn-pricing.outline:hover {
-    background-color: var(--accent-highlight);
-    color: var(--brand-primary);
+.portfolio-img-wrapper {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* --- BOX DE OPCIONAIS (Hospedagem) --- */
-.optionals-box {
-    background-color: rgba(15, 34, 66, 0.6); /* Fundo sutil */
-    border: 1px dashed rgba(190, 196, 204, 0.3); /* Borda tracejada elegante */
-    padding: 30px;
-    border-radius: 15px;
+.portfolio-logo {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
 }
 
-.optionals-box h4 {
+.placeholder-logo {
+    font-size: 3rem;
+    color: var(--text-muted);
+    opacity: 0.3;
+}
+
+.badge.bg-info {
+    background-color: var(--accent-highlight) !important;
+    color: var(--brand-primary) !important;
+    font-weight: 700;
+}
+
+.tech-tag {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    transition: 0.3s;
+}
+
+.tech-tag:hover {
+    opacity: 1;
     color: var(--white);
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    transform: translateY(-2px);
 }
 
-/* --- CORREÇÃO DO CABEÇALHO (Tira o buraco em baixo) --- */
-.page-header {
-    margin-bottom: 0 !important; /* Força margem zero */
-    padding-bottom: 60px; /* Dá o respiro interno, mas mantém o fundo */
+.tech-tag i {
+    color: var(--accent-highlight);
+}
+
+.tracking-section {
+    background-color: #0b1a38;
+    border-top: 1px solid rgba(255,255,255,0.05);
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Garante que a seção seguinte encoste corretamente */
-.section-padding {
-    padding-top: 60px;
+.accordion-button::after {
+    filter: invert(1);
 }
 
-/* --- SEPARADOR INTELIGENTE (Sistemas Web) --- */
-/* No Desktop: Linha vertical na esquerda */
-.custom-separator {
-    border-left: 1px solid rgba(190, 196, 204, 0.2);
+.accordion-button:not(.collapsed) {
+    color: var(--accent-highlight);
+    background-color: rgba(255,255,255,0.02);
+    box-shadow: none;
 }
 
-/* No Mobile: Linha horizontal no topo */
-@media (max-width: 768px) {
-    .custom-separator {
-        border-left: none !important;
-        border-top: 1px solid rgba(190, 196, 204, 0.2);
-        padding-top: 30px;
-        margin-top: 30px;
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(255,255,255,0.1);
+}
+
+#scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 99999;
+    background: transparent;
+}
+
+#scroll-progress-bar {
+    height: 3px;
+    background: var(--accent-highlight);
+    width: 0%;
+    box-shadow: 0 0 10px var(--accent-highlight);
+}
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--brand-primary);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.cookie-banner {
+    position: fixed;
+    bottom: -100px;
+    left: 0;
+    width: 100%;
+    background-color: rgba(11, 26, 56, 0.95);
+    border-top: 1px solid var(--accent-highlight);
+    padding: 20px 0;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+    transition: bottom 0.5s ease;
+}
+
+.cookie-banner.show-banner {
+    bottom: 0;
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.process-step {
+    z-index: 2;
+    padding-top: 0 !important;
+}
+
+.decision-icon {
+    border-color: var(--accent-highlight) !important;
+    color: var(--accent-highlight) !important;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.3) !important;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-darker);
+    border: 2px solid var(--accent-highlight);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+}
+
+.step-icon.text-info {
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.logic-box {
+    font-size: 0.75rem;
+    position: relative;
+    z-index: 5;
+    background-color: rgba(11, 26, 56, 0.95);
+}
+
+.x-small {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (min-width: 992px) {
+    .process-timeline {
+        position: relative;
     }
 }
 
+@media (min-width: 992px) {
+    .process-timeline {
+        position: relative;
+    }
+
+    .process-timeline::before {
+        content: '';
+        position: absolute;
+
+        /* AJUSTE VERTICAL: Se ainda estiver torto, mude este valor */
+        /* 24px (Gutter) + 25px (Metade do Ícone 50px) = ~49px teóricos */
+        /* Coloquei 38px visualmente para compensar margens */
+        top: 38px;
+
+        /* AJUSTE HORIZONTAL: 18% trava a linha no meio do 1º e 5º ícone */
+        left: 18%;
+        right: 18%;
+
+        height: 2px;
+        background: rgba(255,255,255,0.1); /* Linha mais sutil */
+        z-index: 0; /* Fica atrás dos ícones */
+    }
+}
+
+.loop-arrow {
+    position: absolute;
+    top: 25px;
+    left: -55%;
+    width: 65%;
+    height: 60px;
+    border-top: 2px dashed rgba(220, 53, 69, 0.4);
+    border-left: 2px dashed rgba(220, 53, 69, 0.4);
+    border-radius: 20px 0 0 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.loop-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: -6px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(220, 53, 69, 0.4);
+}
+
+.loop-text {
+    position: absolute;
+    top: -20px;
+    left: 20%;
+    font-size: 0.6rem;
+    color: #dc3545;
+    background: var(--brand-primary);
+    padding: 0 5px;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   PÁGINA DE CONTATO (ENTERPRISE)
+   Adicionar ao final do style.css
+   ========================================================================== */
+
+/* --- 1. Contact Hero Header --- */
+.contact-header {
+    padding: 100px 0 80px 0;
+    background-color: var(--brand-primary);
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.contact-glow {
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(79, 172, 254, 0.15) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- 2. Sidebar Info (Esquerda) --- */
+.icon-square {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: 0.3s;
+}
+
+.contact-method:hover .icon-square {
+    background-color: var(--accent-highlight) !important;
+    color: var(--brand-primary) !important;
+    border-color: var(--accent-highlight) !important;
+    transform: scale(1.1);
+}
+
+/* --- 3. Formulário Moderno (Floating Labels) --- */
+.form-floating > .form-control,
+.form-floating > .form-select {
+    background-color: rgba(15, 34, 66, 0.6) !important; /* Fundo semi-transparente */
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: var(--white) !important;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: var(--accent-highlight) !important;
+    box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25);
+}
+
+.form-floating > label {
+    color: var(--text-muted);
+}
+
+/* Ajuste para o textarea não quebrar o layout */
+textarea {
+    resize: none;
+}
+
+/* --- 4. Steps Timeline (Rodapé do contato) --- */
+.steps-number {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--accent-highlight);
+    color: var(--accent-highlight);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-weight: bold;
+    background-color: var(--bg-darker);
+    position: relative;
+    z-index: 2;
+}
+
+/* Linha conectora apenas no Desktop */
+@media (min-width: 768px) {
+    .steps-number::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        width: 200%; /* Estica para conectar ao próximo */
+        height: 2px;
+        background-color: rgba(255,255,255,0.1);
+        transform: translateY(-50%);
+        z-index: -1;
+    }
+
+    /* Remove a linha do último item */
+    .col-md-3:last-child .steps-number::after {
+        display: none;
+    }
+}
+
+/* --- 5. Mapa Dark Mode --- */
+.map-section {
+    width: 100%;
+    line-height: 0; /* Remove espaço branco embaixo do iframe */
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.map-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(22, 48, 93, 0.3); /* Filtro azulado sobre o mapa */
+    pointer-events: none; /* Permite clicar no mapa */
+    z-index: 1;
+}
+
+/* ==========================================================================
+   PÁGINA DE SERVIÇOS (CATÁLOGO ENTERPRISE)
+   Adicionar ao final do style.css
+   ========================================================================== */
+
+/* --- 1. Services Header --- */
+.services-header {
+    padding: 120px 0 80px 0;
+    background-color: var(--brand-primary);
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* --- 2. Service Detail Images (Com Badge Flutuante) --- */
+.service-detail-img {
+    position: relative;
+    transition: transform 0.5s ease;
+}
+
+.service-detail-img:hover {
+    transform: translateY(-5px);
+}
+
+.service-detail-img img {
+    width: 100%;
+    height: auto;
+    /* Efeito de brilho suave na imagem */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* Badge flutuante sobre a imagem */
+.floating-badge {
+    backdrop-filter: blur(10px);
+    background-color: rgba(11, 26, 56, 0.9) !important;
+    border: 1px solid var(--accent-highlight) !important;
+    animation: floatBadge 3s ease-in-out infinite;
+}
+
+@keyframes floatBadge {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* --- 3. Tech Cards (Grid de Tecnologias) --- */
+.tech-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.tech-card:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-highlight);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* --- 4. Sector Cards (Nichos de Mercado) --- */
+.sector-card {
+    background-color: var(--bg-darker);
+    padding: 30px;
+    border-radius: 15px;
+    border-left: 4px solid transparent; /* Linha lateral invisível */
+    border: 1px solid rgba(255,255,255,0.05);
+    height: 100%;
+    transition: 0.3s;
+}
+
+.sector-card:hover {
+    border-left-color: var(--accent-highlight); /* Acende a linha lateral */
+    background-color: rgba(255, 255, 255, 0.03);
+    transform: translateX(5px);
+}
+
+.sector-icon {
+    font-size: 2rem;
+    color: var(--accent-highlight);
+    margin-bottom: 15px;
+    width: 60px;
+    height: 60px;
+    background: rgba(79, 172, 254, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sector-card h4 {
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 10px;
+}
+
+.sector-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+}
+
+/* --- 5. Nav Sticky Secundária --- */
+.sticky-top {
+    backdrop-filter: blur(10px);
+    background-color: rgba(15, 34, 66, 0.95) !important;
+}
+
+/* ==========================================================================
+   PÁGINA DE PORTFÓLIO (ENTERPRISE)
+   Adicionar ao final do style.css
+   ========================================================================== */
+
+/* --- 1. Portfolio Header --- */
+.portfolio-header {
+    padding: 120px 0 100px 0;
+    background-color: var(--brand-primary);
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* --- 2. Filter Bar --- */
+.filter-bar {
+    background-color: rgba(15, 34, 66, 0.95); /* Semi-transparent */
+    backdrop-filter: blur(10px);
+}
+
+.btn-filter {
+    color: var(--text-muted);
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-filter:hover {
+    color: var(--white);
+    background-color: rgba(255,255,255,0.05);
+}
+
+.btn-filter.active {
+    background-color: var(--accent-highlight);
+    color: var(--brand-primary);
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+}
+
+/* --- 3. Project Cards (Avançados) --- */
+.project-card {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-highlight) !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 20px rgba(79, 172, 254, 0.1);
+}
+
+/* Área da Imagem */
+.project-img-wrapper {
+    height: 220px;
+    background: radial-gradient(circle, #1a2a40 0%, #000000 100%);
+    overflow: hidden;
+}
+
+.project-logo {
+    max-height: 80px;
+    max-width: 80%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+}
+
+.project-card:hover .project-logo {
+    transform: scale(1.1);
+}
+
+/* Tech Stack Icons */
+.tech-stack i {
+    transition: color 0.3s;
+}
+.tech-stack i:hover {
+    color: var(--accent-highlight);
+    cursor: help;
+}
+
+/* Texto Pequeno */
+.x-small {
+    font-size: 0.7rem;
+}
+
+.tracking-wide {
+    letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   PÁGINA DE WEBSITES (ADD-ONS)
+   Adicionar ao final do style.css
+   ========================================================================== */
+
+/* --- 1. Website Header --- */
+.website-header {
+    padding: 120px 0 100px 0;
+    background-color: var(--brand-primary);
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.mockup-container {
+    perspective: 1000px;
+}
+
+.rotate-hover {
+    transition: transform 0.5s ease;
+    transform: rotateY(-10deg) rotateX(5deg);
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.5);
+}
+
+.website-header:hover .rotate-hover {
+    transform: rotateY(0deg) rotateX(0deg);
+}
+
+.blur-xl {
+    filter: blur(80px);
+}
+
+/* --- 2. Feature Box (Os 3 Pilares) --- */
+.feature-box {
+    transition: transform 0.3s ease;
+}
+.feature-box:hover {
+    transform: translateY(-5px);
+    border-color: var(--text-muted);
+}
+
+/* --- 3. Tracking Section (Caixa Preta) --- */
+.bg-tracking {
+    background-color: #050b14; /* Quase preto */
+}
+
+.bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Code visual snippet */
+code {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: rgba(0,0,0,0.5);
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: block;
+}
+
+/* --- 4. Optionals Box (Manutenção) --- */
+.ls-1 { letter-spacing: 1px; }
+.fw-black { font-weight: 900; }
+
+/* Ajuste na tabela de comparação */
+.compare-table td, .compare-table th {
+    vertical-align: middle;
 }

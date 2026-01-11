@@ -306,3 +306,515 @@ html, body {
     text-align: right;
     color: var(--text-muted);
     font-weight: 500;
+
+
+/* ==========================================================================
+   NOVA HOME - AJUSTES MOBILE
+   Cole no final do mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 768px) {
+
+    /* Hero Badge mais compacto */
+    .hero-badge {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+    }
+
+    /* Ajuste de Título Gradient */
+    .hero-title {
+        font-size: 2rem !important; /* Força tamanho legível */
+        margin-bottom: 20px !important;
+    }
+
+    /* Botões empilhados */
+    .hero-btns {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 20px;
+    }
+    .hero-btns .btn {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    /* Tech Strip em Grid 2x2 */
+    .tech-strip .d-flex {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .tech-tag {
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    /* Tracking Section - Inverte ordem (Texto primeiro, imagem depois) */
+    .tracking-section .row {
+        flex-direction: column;
+    }
+    .tracking-visual {
+        margin-top: 30px;
+    }
+
+    /* Timeline Vertical */
+    .process-timeline::before {
+        display: none; /* Remove linha horizontal */
+    }
+    .process-step {
+        display: flex;
+        text-align: left !important;
+        margin-bottom: 30px;
+        padding-top: 0;
+        align-items: flex-start;
+    }
+    .step-icon {
+        margin-right: 20px;
+        margin-left: 0 !important;
+        min-width: 50px; /* Garante que não encolha */
+    }
+    .process-step h5 {
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    .process-step p {
+        padding-left: 0 !important;
+        text-align: left;
+    }
+
+    /* Stats em Grid 2x2 (Já está no HTML com col-6, mas ajusta margem) */
+    .stats-section h3 {
+        font-size: 2rem !important;
+    }
+
+    /* CTA Box */
+    .cta-box {
+        padding: 30px 20px !important;
+    }
+}
+
+/* ==========================================================================
+   MASTER PAGE MOBILE FIXES
+   Cole no final do mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Esconde Top Bar no Mobile (já feito com d-none d-lg-block, mas reforço) */
+
+    /* Navbar Mobile */
+    .navbar-brand {
+        font-size: 1.5rem; /* Logo um pouco menor */
+    }
+
+    /* Mega Footer Mobile */
+    footer .col-lg-4, footer .col-lg-2, footer .col-lg-3 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    /* Alinha ícones sociais no centro */
+    footer .social-links {
+        justify-content: center;
+    }
+
+    /* Alinha contatos no centro e em coluna */
+    .footer-contact li {
+        justify-content: center;
+        flex-direction: column;
+        gap: 5px !important;
+    }
+
+    /* Floating Buttons - Ajuste de posição */
+    .floating-group {
+        bottom: 20px;
+        right: 20px;
+    }
+    .btn-float {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+    }
+
+    /* Cookie Banner Stack */
+    .cookie-banner .container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cookie-banner button {
+        width: 100%; /* Botões full width no mobile para facilitar o toque */
+        padding: 10px !important;
+    }
+}
+
+/* ==========================================================================
+   PÁGINA DE CONTATO - ULTRA MOBILE OPTIMIZATION
+   Adicione ao final de mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 991px) {
+
+    /* --- 1. HEADER E TÍTULOS --- */
+    .contact-header {
+        padding: 100px 0 40px 0 !important; /* Ajuste para navbar fixa */
+        text-align: center;
+    }
+
+    .contact-header h1 {
+        font-size: 2.2rem !important; /* Título grande mas seguro */
+    }
+
+    /* --- 2. ÁREA DE INFORMAÇÕES (SIDEBAR) --- */
+    .contact-sidebar {
+        padding-right: 0 !important;
+        margin-bottom: 20px;
+    }
+
+    /* Transforma os itens de contato em "Cards" clicáveis e bonitos */
+    .contact-method {
+        flex-direction: row; /* Mantém ícone ao lado do texto */
+        align-items: center;
+        text-align: left;
+        background-color: rgba(255, 255, 255, 0.03); /* Fundo sutil */
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+        /* Sombra leve para destacar */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .contact-method .icon-square {
+        margin-right: 20px !important; /* Espaço maior entre ícone e texto */
+        margin-bottom: 0 !important; /* Remove margem de baixo do layout antigo */
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0,0,0,0.3) !important; /* Ícone mais escuro */
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+
+    /* Links (Whats/Email) maiores para o dedo */
+    .contact-method a {
+        font-size: 1.1rem;
+        display: block;
+        padding: 5px 0;
+    }
+
+    /* Box de Garantia/Compromisso */
+    .contact-sidebar .p-4 {
+        margin-top: 30px !important;
+        background: linear-gradient(145deg, rgba(22, 48, 93, 0.4), rgba(0,0,0,0.4)) !important;
+        border: 1px dashed rgba(255,255,255,0.1) !important;
+    }
+
+    /* --- 3. FORMULÁRIO --- */
+    .form-wrapper {
+        padding: 30px 20px !important; /* Mais espaço nas bordas */
+        border-radius: 20px !important;
+        margin-top: 0 !important;
+    }
+
+    /* Inputs confortáveis */
+    .form-control, .form-select {
+        height: 55px; /* Altura de toque segura */
+        font-size: 16px !important; /* Evita zoom no iOS */
+        background-color: rgba(0,0,0,0.3) !important; /* Fundo mais escuro para contraste */
+    }
+
+    textarea.form-control {
+        height: 150px;
+    }
+
+    .form-floating > label {
+        padding-top: 15px; /* Centraliza o label verticalmente */
+    }
+
+    /* Botão de Enviar Gigante */
+    .form-wrapper .btn-merlo {
+        width: 100%;
+        padding: 18px;
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+
+    /* --- 4. TIMELINE VERTICAL (CONECTADA) --- */
+
+    /* Remove a linha horizontal antiga */
+    .steps-number::after {
+        display: none;
+    }
+
+    /* Cria uma linha vertical conectando os passos */
+    .col-md-3.position-relative {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left !important;
+        padding-bottom: 40px; /* Espaço para a linha */
+        position: relative;
+    }
+
+    /* O número/bolinha */
+    .steps-number {
+        margin: 0 20px 0 0 !important; /* Margem direita fixa */
+        flex-shrink: 0; /* Não deixa a bolinha esmagar */
+        z-index: 2;
+    }
+
+    /* A Linha Vertical */
+    .col-md-3.position-relative::before {
+        content: '';
+        position: absolute;
+        top: 40px; /* Começa abaixo da bolinha */
+        left: 32px; /* (Padding container 12px) + (Metade da bolinha 20px) = Ajuste fino */
+        width: 2px;
+        height: calc(100% - 40px); /* Vai até o próximo */
+        background-color: rgba(255,255,255,0.1);
+        z-index: 1;
+    }
+
+    /* Remove a linha do último item */
+    .col-md-3.position-relative:last-child::before {
+        display: none;
+    }
+
+    /* Ajuste fino para a linha ficar centralizada na bolinha no mobile */
+    /* Como o col tem padding, o left precisa ser calculado.
+       Se o col tem padding-left: calc(var(--bs-gutter-x) * .5); que é ~12px
+       A bolinha tem 40px de largura. Centro da bolinha = 12px + 20px = 32px.
+    */
+    @media (max-width: 767px) {
+        .col-md-3.position-relative::before {
+            left: calc(12px + 20px - 1px); /* Ajuste preciso */
+        }
+    }
+
+    /* --- 5. MAPA --- */
+    .map-section iframe {
+        height: 350px !important; /* Altura boa para mobile */
+    }
+}
+
+/* ==========================================================================
+   CORREÇÃO DEFINITIVA - FORMULÁRIO DE CONTATO (MOBILE)
+   Adicione ao final do arquivo mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 991px) {
+
+    /* 1. CORREÇÃO DA ESTRUTURA (Evita que a grade g-5 estoure a tela) */
+    .contact-wrapper .row.g-5 {
+        --bs-gutter-x: 1.5rem !important; /* Força comportamento de g-3 no mobile */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .contact-wrapper .col-lg-7 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* 2. TRAVA DO CONTAINER DO FORMULÁRIO */
+    .form-wrapper {
+        padding: 30px 15px !important; /* Padding lateral reduzido */
+        width: 100% !important;
+        overflow-x: hidden !important; /* Garante que nada vaze */
+        border-radius: 15px !important;
+    }
+
+    /* 3. CORREÇÃO DO TEXTO DO LABEL QUE SAI DA TELA */
+    .form-floating > label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 1rem 0.75rem !important;
+
+        /* O segredo para quebrar o texto: */
+        white-space: normal !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        font-size: 0.85rem !important;
+        line-height: 1.2 !important;
+        pointer-events: none;
+    }
+
+    /* 4. ESTADO DO LABEL QUANDO CLICADO (SOBE E FICA CURTO) */
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        /* Transforma em 1 linha com ... quando sobe, para não poluir */
+        white-space: nowrap !important;
+        width: 90% !important;
+        text-overflow: ellipsis;
+        transform: scale(0.85) translateY(-0.6rem) translateX(0.15rem) !important;
+        background-color: transparent !important;
+        height: auto !important;
+    }
+
+    /* 5. AJUSTE NOS INPUTS */
+    .form-control {
+        font-size: 16px !important; /* Tamanho legível */
+        padding-right: 10px !important; /* Espaço na direita */
+    }
+}
+
+/* ==========================================================================
+   PÁGINA DE SERVIÇOS - MOBILE FIXES
+   Cole no final do mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 991px) {
+
+    /* --- 1. Header --- */
+    .services-header {
+        padding: 100px 0 40px 0 !important;
+        text-align: center;
+    }
+
+    /* --- 2. Inversão de Ordem (Imagens x Texto) --- */
+    /* No mobile, queremos a imagem em cima, depois o texto.
+       No HTML, a seção 2 usa 'flex-row-reverse'.
+       Aqui removemos isso para empilhar normal. */
+    .row.flex-row-reverse {
+        flex-direction: row !important;
+    }
+
+    /* Ajuste de margens */
+    .service-detail-img {
+        margin-bottom: 30px;
+    }
+
+    /* Badge flutuante menor no mobile */
+    .floating-badge {
+        padding: 10px !important;
+        font-size: 0.8rem;
+        m: 2 !important; /* Margin bootstrap class override equivalent */
+        margin: 15px !important;
+    }
+
+    /* --- 3. Cards de Tecnologia --- */
+    .tech-card {
+        padding: 20px 10px !important;
+    }
+
+    .tech-card i {
+        font-size: 2.5rem !important; /* Ícone um pouco menor */
+    }
+
+    /* --- 4. Cards de Setores --- */
+    .sector-card {
+        margin-bottom: 15px;
+        padding: 20px;
+    }
+
+    /* --- 5. Navegação Secundária --- */
+    /* Já está com d-none d-md-block no HTML, mas garantindo: */
+    .sticky-top {
+        display: none !important;
+    }
+}
+
+/* ==========================================================================
+   PÁGINA DE PORTFÓLIO - MOBILE FIXES
+   Cole no final do mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 991px) {
+
+    /* --- 1. Header Compacto --- */
+    .portfolio-header {
+        padding: 100px 0 60px 0 !important;
+        text-align: center;
+        min-height: auto;
+    }
+
+    /* Estatísticas em linha no mobile */
+    .portfolio-header .row.mt-5 {
+        margin-top: 30px !important;
+    }
+
+    .portfolio-header h3 {
+        font-size: 1.5rem !important;
+    }
+
+    /* --- 2. Barra de Filtros (Scrollável) --- */
+    /* No mobile, transformamos os botões em um scroll horizontal para não quebrar linha */
+    .filter-bar {
+        justify-content: flex-start !important; /* Alinha no começo */
+        flex-wrap: nowrap !important; /* Impede quebra de linha */
+        overflow-x: auto; /* Permite rolar pro lado */
+        padding: 15px 10px !important;
+
+        /* Esconde a barra de rolagem feia */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .filter-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .btn-filter {
+        white-space: nowrap; /* Texto não quebra */
+        flex-shrink: 0; /* Botão não esmaga */
+    }
+
+    /* --- 3. Cards de Projeto --- */
+    .project-card {
+        margin-bottom: 20px;
+    }
+
+    .project-img-wrapper {
+        height: 180px; /* Um pouco menor no celular */
+    }
+
+    /* Ajuste da margem superior do container para compensar o header */
+    .mt-n5 {
+        margin-top: -30px !important;
+    }
+}
+
+/* ==========================================================================
+   PÁGINA DE WEBSITES - MOBILE FIXES
+   Cole no final do mediastyle.css
+   ========================================================================== */
+
+@media (max-width: 991px) {
+
+    /* --- 1. Header --- */
+    .website-header {
+        padding: 100px 0 60px 0 !important;
+        text-align: center;
+    }
+
+    /* Esconde o mockup 3D no mobile para economizar dados e espaço (já está com d-none d-lg-block no HTML, mas reforçando) */
+
+    /* --- 2. Tracking Box --- */
+    .bg-tracking {
+        padding: 30px 20px !important; /* Menos padding */
+        text-align: center; /* Centraliza tudo */
+    }
+
+    .bg-tracking ul {
+        text-align: left; /* Lista alinhada a esquerda */
+        display: inline-block; /* Mas centralizada no bloco */
+    }
+
+    .bg-tracking .display-1 {
+        font-size: 4rem !important; /* Ícone menor */
+    }
+
+    /* --- 3. Optionals Box (Manutenção) --- */
+    .optionals-box {
+        padding: 20px !important;
+        text-align: center;
+    }
+
+    .border-start {
+        border-left: none !important;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 20px;
+        padding-left: 0 !important;
+    }
+}

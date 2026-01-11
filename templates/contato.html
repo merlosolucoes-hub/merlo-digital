@@ -1,62 +1,178 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="row">
 
-                <div class="col-md-5 mb-4">
-                    <div class="contact-info-box h-100">
-                        <h3 class="mb-4">Fale Conosco</h3>
-                        <p class="text-muted mb-4">
-                            Estamos prontos para entender seu desafio e propor a solução técnica ideal.
-                        </p>
-
-                        <div class="mb-4">
-                            <h6 class="text-white"><i class="bi bi-envelope text-info"></i> E-mail</h6>
-                            <a href="mailto:atendimento@merlodigital.com" class="text-muted">atendimento@merlodigital.com</a>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6 class="text-white"><i class="bi bi-whatsapp text-info"></i> WhatsApp / Telefone</h6>
-                            <a href="https://wa.me/5547992539750" target="_blank" class="text-muted">(47) 99253-9750</a>
-                        </div>
-
-                        <div class="mt-5">
-                            <small class="text-muted d-block">Atendimento B2B</small>
-                            <small class="text-muted">Segunda a Sábado</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-7">
-                    <div class="p-4 bg-dark border border-secondary rounded">
-                        <h4 class="mb-3">Solicitar Contato</h4>
-                        <form action="{{ url_for('contato') }}" method="POST">
-                            <div class="mb-3">
-                                <label for="nome" class="form-label">Seu Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" required placeholder="Ex: João Silva">
-                            </div>
-                            <div class="mb-3">
-                                <label for="empresa" class="form-label">Nome da Empresa</label>
-                                <input type="text" class="form-control" id="empresa" name="empresa" placeholder="Ex: Silva Tech Ltda">
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">E-mail Corporativo</label>
-                                <input type="email" class="form-control" id="email" name="email" required placeholder="nome@empresa.com.br">
-                            </div>
-                            <div class="mb-3">
-                                <label for="mensagem" class="form-label">Como podemos ajudar?</label>
-                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required placeholder="Descreva brevemente sua necessidade..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-merlo w-100">Enviar Mensagem</button>
-                        </form>
-                    </div>
-                </div>
-
+<div class="contact-header position-relative overflow-hidden">
+    <div class="container position-relative z-2 h-100 d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="badge bg-info text-dark mb-3 px-3 py-2 rounded-pill fw-bold fade-in-up">ATENDIMENTO COMERCIAL</span>
+                <h1 class="display-4 fw-bold text-white mb-3 fade-in-up delay-1">Vamos construir algo <span class="text-gradient">extraordinário.</span></h1>
+                <p class="lead text-muted fade-in-up delay-2" style="max-width: 600px;">
+                    Você tem o desafio, nós temos a tecnologia. Preencha o formulário abaixo e receba uma consultoria técnica inicial gratuita.
+                </p>
             </div>
         </div>
     </div>
+    <div class="contact-glow"></div>
 </div>
+
+<section class="section-padding pb-5 contact-wrapper">
+    <div class="container">
+
+        <div class="row justify-content-center g-5">
+
+            <div class="col-lg-5 mb-5 mb-lg-0 fade-in-up delay-3">
+                <div class="contact-sidebar pe-lg-4">
+
+                    <h3 class="mb-4 text-white">Canais Diretos</h3>
+                    <p class="text-muted mb-5">
+                        Prefere uma conversa mais ágil? Nossa equipe comercial está disponível nos canais abaixo.
+                    </p>
+
+                    <div class="d-flex align-items-start mb-4 contact-method">
+                        <div class="icon-square bg-dark border border-secondary text-info rounded-circle me-3">
+                            <i class="bi bi-whatsapp"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-white mb-1">WhatsApp Business</h6>
+                            <p class="text-muted small mb-1">Resposta média em 15 min</p>
+                            <a href="https://wa.me/5547992539750" target="_blank" class="text-info text-decoration-none fw-bold">
+                                (47) 99253-9750 <i class="bi bi-arrow-right-short"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-4 contact-method">
+                        <div class="icon-square bg-dark border border-secondary text-info rounded-circle me-3">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-white mb-1">E-mail Corporativo</h6>
+                            <p class="text-muted small mb-1">Para atendimento geral</p>
+                            <a href="mailto:atendimento@merlodigital.com" class="text-info text-decoration-none fw-bold">
+                                atendimento@merlodigital.com
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="p-4 rounded-3 bg-dark border border-secondary mt-5 position-relative overflow-hidden">
+                        <div class="position-relative z-2">
+                            <h5 class="text-white mb-3"><i class="bi bi-shield-check text-success me-2"></i> Compromisso Merlô</h5>
+                            <ul class="list-unstyled text-muted small mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i> Resposta em até 24 horas úteis.</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i> Sigilo total (NDA disponível).</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i> Proposta técnica detalhada.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-7 fade-in-up delay-4">
+                <div class="form-wrapper bg-darker p-4 p-md-5 rounded-4 border border-secondary shadow-lg">
+                    <h3 class="mb-2">Solicitar Orçamento</h3>
+                    <p class="text-muted small mb-4">Campos com <span class="text-danger">*</span> são obrigatórios.</p>
+
+                    <form action="{{ url_for('contato') }}" method="POST" class="needs-validation">
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-dark border-secondary text-white" id="nome" name="nome" placeholder="Seu Nome" required>
+                                    <label for="nome" class="text-muted">Seu Nome *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-dark border-secondary text-white" id="empresa" name="empresa" placeholder="Nome da Empresa">
+                                    <label for="empresa" class="text-muted">Nome da Empresa</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-dark border-secondary text-white" id="email" name="email" placeholder="E-mail Corporativo" required>
+                                    <label for="email" class="text-muted">E-mail Corporativo *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control bg-dark border-secondary text-white" id="telefone" name="telefone" placeholder="WhatsApp" required>
+                                    <label for="telefone" class="text-muted">WhatsApp / Telefone *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea class="form-control bg-dark border-secondary text-white" placeholder="Detalhes do projeto" id="mensagem" name="mensagem" style="height: 150px" required></textarea>
+                            <label for="mensagem" class="text-muted">Conte sobre sua necessidade *</label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-merlo btn-lg py-3 shadow-neon">
+                                <i class="bi bi-send-fill me-2"></i> Enviar Solicitação
+                            </button>
+                        </div>
+
+                        <p class="text-center mt-3 mb-0" style="font-size: 0.75rem; color: #6c757d;">
+                            Ao enviar, você concorda com nossa Política de Privacidade. Seus dados estão seguros.
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-top border-bottom border-secondary bg-darker">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h6 class="text-info text-uppercase tracking-widest">Metodologia</h6>
+            <h2 class="text-white">Próximos Passos</h2>
+        </div>
+
+        <div class="row text-center justify-content-center g-4">
+            <div class="col-md-3 position-relative">
+                <div class="steps-number mb-3">1</div>
+                <h5 class="text-white">Análise</h5>
+                <p class="text-muted small">Nossa equipe técnica analisa sua solicitação em até 24h.</p>
+            </div>
+            <div class="col-md-3 position-relative">
+                <div class="steps-number mb-3">2</div>
+                <h5 class="text-white">Descoberta</h5>
+                <p class="text-muted small">Entramos em contato para entender os detalhes.</p>
+            </div>
+            <div class="col-md-3 position-relative">
+                <div class="steps-number mb-3">3</div>
+                <h5 class="text-white">Proposta</h5>
+                <p class="text-muted small">Enviamos um orçamento detalhado e cronograma.</p>
+            </div>
+            <div class="col-md-3 position-relative">
+                <div class="steps-number mb-3 bg-success border-success text-white">4</div>
+                <h5 class="text-white">Início</h5>
+                <p class="text-muted small">Aprovado? Começamos o desenvolvimento imediatamente.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="map-section position-relative">
+    <div class="map-overlay"></div>
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113865.667277813!2d-49.16782315025964!3d-26.91572083967831!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94df192667a426e7%3A0x6d9a4625b90306c!2sBlumenau%2C%20SC!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
+        width="100%"
+        height="450"
+        style="border:0; filter: grayscale(100%) invert(92%) contrast(83%);"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</section>
+
 {% endblock %}

@@ -2,31 +2,132 @@
 
 {% block content %}
 
-<div class="page-header mb-5">
-    <div class="container pt-4">
-        <h1>Desenvolvimento Web</h1>
-        <p>Escolha a arquitetura ideal para o momento do seu negócio.</p>
+<div class="website-header position-relative overflow-hidden">
+    <div class="container position-relative z-2 h-100 d-flex flex-column justify-content-center">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-info text-dark mb-3 px-3 py-2 rounded-pill fw-bold fade-in-up">DESENVOLVIMENTO WEB</span>
+                <h1 class="display-4 fw-bold text-white mb-4 fade-in-up delay-1">Seu melhor vendedor <br><span class="text-gradient">trabalha 24h por dia.</span></h1>
+                <p class="lead text-muted fade-in-up delay-2 mb-4" style="max-width: 600px;">
+                    Não criamos apenas "sites bonitos". Criamos máquinas de vendas otimizadas para o Google, rápidas no celular e integradas ao seu WhatsApp.
+                </p>
+                <div class="d-flex gap-3 fade-in-up delay-3">
+                    <a href="#pricing" class="btn btn-merlo px-4 py-2">Ver Planos</a>
+                    <a href="#diferenciais" class="btn btn-outline-light px-4 py-2">Por que a Merlô?</a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block fade-in-up delay-2">
+                <div class="mockup-container position-relative">
+                    <div class="mockup-circle bg-info opacity-10 blur-xl position-absolute"></div>
+                    <img src="https://images.unsplash.com/photo-1481487484168-9b930d552086?q=80&w=1000&auto=format&fit=crop" class="img-fluid rounded-4 shadow-lg border border-secondary position-relative z-2 rotate-hover" alt="Site Merlô">
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="contact-glow" style="top: -50%; right: -20%;"></div>
 </div>
 
-<section class="section-padding pb-5">
+<section id="diferenciais" class="py-5 bg-darker border-bottom border-secondary">
+    <div class="container py-4">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="mb-3">A Diferença entre um Site e <span class="text-info">um Ativo Digital</span></h2>
+                <p class="text-muted">A maioria dos sites morre porque ninguém encontra. Nós resolvemos isso na raiz.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-box p-4 border border-secondary rounded bg-dark h-100">
+                    <div class="icon-circle mb-3 bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <h5 class="text-white">Velocidade Extrema</h5>
+                    <p class="small text-muted">
+                        Cada segundo de carregamento custa 20% de conversão. Nossos sites carregam em milissegundos usando tecnologia estática e CDN global.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box p-4 border border-secondary rounded bg-dark h-100 highlight-border">
+                    <div class="icon-circle mb-3 bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-google"></i>
+                    </div>
+                    <h5 class="text-white">Google Friendly (SEO)</h5>
+                    <p class="small text-muted">
+                        Estrutura de código semântica (Schema.org) que facilita a leitura pelos robôs do Google, ajudando você a aparecer nas pesquisas locais.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box p-4 border border-secondary rounded bg-dark h-100">
+                    <div class="icon-circle mb-3 bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-phone-flip"></i>
+                    </div>
+                    <h5 class="text-white">Mobile First</h5>
+                    <p class="small text-muted">
+                        90% dos seus clientes vão acessar pelo celular. Desenhamos a experiência pensando no toque e na tela pequena primeiro.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 my-5 position-relative">
     <div class="container">
+        <div class="p-5 rounded-5 border border-info border-opacity-25 shadow-neon bg-tracking position-relative overflow-hidden">
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-grid-pattern opacity-10"></div>
+
+            <div class="row align-items-center position-relative z-2">
+                <div class="col-lg-7">
+                    <span class="badge bg-info text-dark mb-3"><i class="bi bi-eye-fill me-1"></i> EXCLUSIVIDADE MERLÔ</span>
+                    <h2 class="display-6 fw-bold text-white mb-3">Pare de "Achar". Comece a <span class="text-info">Saber.</span></h2>
+                    <p class="lead text-white-50 mb-4">
+                        Incluso na nossa manutenção, o <strong>Merlô Tracking</strong> é nosso sistema proprietário de inteligência.
+                        Diferente do Google Analytics (que é complexo), nós entregamos o que importa.
+                    </p>
+                    <ul class="list-unstyled text-white-50 mb-4">
+                        <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-3 fs-5"></i> Quem clicou no botão do WhatsApp?</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-3 fs-5"></i> De qual cidade/bairro ele é?</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-3 fs-5"></i> Ele usa iPhone ou Android?</li>
+                    </ul>
+                    <div class="p-3 bg-black bg-opacity-50 rounded border border-secondary d-inline-block">
+                        <small class="text-muted d-block mb-1">DADOS REAIS:</small>
+                        <code class="text-success">"Clique no Whats" -> "Blumenau/SC" -> "iPhone 13"</code>
+                    </div>
+                </div>
+                <div class="col-lg-5 mt-5 mt-lg-0 text-center">
+                    <i class="bi bi-crosshair display-1 text-info opacity-75"></i>
+                    <p class="mt-3 text-info small tracking-widest">RASTREAMENTO ATIVO</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="section-padding pb-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2>Investimento Inteligente</h2>
+            <p class="text-muted">Escolha o pacote ideal para o momento da sua empresa.</p>
+        </div>
 
         <div class="pricing-grid mb-5">
 
             <div class="pricing-card basic">
                 <div class="badge">Start</div>
                 <h3>Basic</h3>
-                <p class="desc">Presença digital ágil e direta.</p>
+                <p class="desc">Presença digital ágil para quem está começando.</p>
                 <div class="price">R$ 600<span>/único</span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> <strong>Até 2 Páginas</strong> (Início + Contato)</li>
-                    <li><i class="fas fa-check"></i> 100% Otimizado para Celular</li>
-                    <li><i class="fas fa-check"></i> Botões de Conversão (WhatsApp)</li>
-                    <li><i class="fas fa-check"></i> Hospedagem de Alta Performance</li>
+                    <li><i class="fas fa-check"></i> <strong>Até 2 Páginas</strong> (Home + Contato)</li>
+                    <li><i class="fas fa-check"></i> Otimizado para Celular</li>
+                    <li><i class="fas fa-check"></i> Botões de WhatsApp (Link direto)</li>
+                    <li><i class="fas fa-check"></i> Hospedagem Rápida</li>
                 </ul>
-                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+tenho+interesse+no+Site+Basic."
-                   class="btn-pricing" target="_blank">
+                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+tenho+interesse+no+Site+Basic." class="btn-pricing" target="_blank">
                    <i class="bi bi-whatsapp"></i> Contratar Basic
                 </a>
             </div>
@@ -34,16 +135,15 @@
             <div class="pricing-card standard">
                 <div class="badge">Recomendado</div>
                 <h3>Standard</h3>
-                <p class="desc">Site Institucional para autoridade.</p>
+                <p class="desc">Site Institucional completo para gerar autoridade.</p>
                 <div class="price">R$ 1.200<span>/único</span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> Até 5 Páginas Internas</li>
-                    <li><i class="fas fa-check"></i> Galeria de Fotos / Projetos</li>
-                    <li><i class="fas fa-check"></i> Mapa e Formulário de Contato</li>
+                    <li><i class="fas fa-check"></i> <strong>Até 5 Páginas</strong> (Sobre, Serviços...)</li>
+                    <li><i class="fas fa-check"></i> Galeria de Fotos / Portfólio</li>
+                    <li><i class="fas fa-check"></i> Mapa Interativo e Formulário</li>
                     <li><i class="fas fa-check"></i> SEO Local Estruturado</li>
                 </ul>
-                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+tenho+interesse+no+plano+Standard."
-                   class="btn-pricing" target="_blank">
+                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+tenho+interesse+no+plano+Standard." class="btn-pricing" target="_blank">
                    <i class="bi bi-whatsapp"></i> Contratar Standard
                 </a>
             </div>
@@ -51,16 +151,15 @@
             <div class="pricing-card plus">
                 <div class="badge highlight-badge">Destaque Merlô</div>
                 <h3>Standard Plus</h3>
-                <p class="desc">Site Dinâmico integrado ao Google.</p>
+                <p class="desc">Site Dinâmico integrado ao Google Sheets.</p>
                 <div class="price">R$ 1.800<span>/único</span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> <strong>Gestão via Google Sheets</strong></li>
+                    <li><i class="fas fa-check"></i> <strong>Gestão via Planilha Google</strong></li>
                     <li><i class="fas fa-check"></i> Atualize preços/fotos pelo celular</li>
-                    <li><i class="fas fa-check"></i> Zero custo de Banco de Dados</li>
-                    <li><i class="fas fa-check"></i> Ideal para Cardápios e Catálogos</li>
+                    <li><i class="fas fa-check"></i> Ideal para Imobiliárias/Cardápios</li>
+                    <li><i class="fas fa-check"></i> Sem custo de Banco de Dados</li>
                 </ul>
-                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+quero+entender+o+plano+Standard+Plus+(Google+Sheets)."
-                   class="btn-pricing" target="_blank">
+                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+quero+entender+o+plano+Standard+Plus+(Google+Sheets)." class="btn-pricing" target="_blank">
                    <i class="bi bi-whatsapp"></i> Contratar Plus
                 </a>
             </div>
@@ -68,16 +167,15 @@
             <div class="pricing-card pro">
                 <div class="badge">Corporativo</div>
                 <h3>Pro</h3>
-                <p class="desc">Sistema Web Completo.</p>
+                <p class="desc">Sistema Web Completo e Personalizado.</p>
                 <div class="price price-text">Sob Consulta</div>
                 <ul>
                     <li><i class="fas fa-check"></i> Painel Administrativo Próprio</li>
-                    <li><i class="fas fa-check"></i> Banco de Dados Dedicado</li>
+                    <li><i class="fas fa-check"></i> Banco de Dados Dedicado (SQL)</li>
                     <li><i class="fas fa-check"></i> Área de Login / Usuários</li>
                     <li><i class="fas fa-check"></i> Regras de Negócio Complexas</li>
                 </ul>
-                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+tenho+interesse+no+plano+Pro."
-                   class="btn-pricing outline" target="_blank">
+                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+tenho+interesse+no+plano+Pro." class="btn-pricing outline" target="_blank">
                    <i class="bi bi-whatsapp"></i> Falar com Especialista
                 </a>
             </div>
@@ -89,16 +187,32 @@
                 <div class="optionals-box">
                     <div class="row align-items-center">
                         <div class="col-md-8">
-                            <h4><i class="bi bi-server text-info"></i> Hospedagem & Manutenção</h4>
-                            <p class="text-muted mb-0">
-                                Para manter seu site online, rápido e seguro, oferecemos o plano de cuidados digitais.
-                                Inclui servidor de alta performance, certificado SSL (cadeado de segurança) e suporte técnico.
+                            <h4 class="mb-3"><i class="bi bi-rocket-takeoff-fill text-info"></i> Plano de Performance & Manutenção</h4>
+                            <p class="text-muted mb-3">
+                                Garanta que seu site continue gerando resultados todos os meses com nossa estrutura premium.
                             </p>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled text-muted small mb-0">
+                                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Merlô Tracking Incluso:</strong> Relatórios de cliques.</li>
+                                        <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>SEO Monitorado:</strong> Melhorias contínuas para o Google.</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled text-muted small mb-0">
+                                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Hospedagem de Alta Velocidade.</li>
+                                        <li><i class="bi bi-check-circle-fill text-success me-2"></i> Certificado de Segurança (SSL).</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-center mt-3 mt-md-0 border-start border-secondary">
-                            <span class="d-block text-muted small">A partir de</span>
-                            <span class="d-block text-white fs-3 fw-bold">R$ 50<small>/mês</small></span>
-                            <small class="text-info">*Opcional</small>
+                        <div class="col-md-4 text-center mt-4 mt-md-0 border-start border-secondary ps-md-4">
+                            <span class="d-block text-muted small text-uppercase fw-bold">Assinatura Mensal</span>
+                            <span class="d-block text-white fs-2 fw-black my-1">R$ 70<small class="fs-6 text-muted">/mês</small></span>
+                            <small class="text-info d-block">*Opcional (Sem fidelidade)</small>
+                            <a href="https://wa.me/5547992539750?text=Tenho+interesse+na+manuten%C3%A7%C3%A3o+com+Merl%C3%B4+Tracking." class="btn btn-sm btn-outline-light mt-3 rounded-pill">
+                                Quero este plano
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -106,7 +220,7 @@
         </div>
 
         <div class="comparison-section mb-5 d-none d-md-block">
-            <h2 class="section-title text-center mb-4">Comparativo Técnico</h2>
+            <h3 class="text-center mb-4">Comparativo Técnico Detalhado</h3>
             <div class="table-responsive">
                 <table class="compare-table">
                     <thead>
@@ -120,16 +234,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Estrutura</strong></td>
-                            <td>Até 2 Páginas</td>
-                            <td>Multi-páginas (até 5)</td>
-                            <td>Multi-páginas Dinâmico</td>
-                            <td>Sistema Web Completo</td>
+                            <td><strong>Páginas Inclusas</strong></td>
+                            <td>Até 2</td>
+                            <td>Até 5</td>
+                            <td>Até 5 (Dinâmicas)</td>
+                            <td>Ilimitadas</td>
                         </tr>
                         <tr>
                             <td><strong>Atualização de Conteúdo</strong></td>
-                            <td>Via Código (Merlô)</td>
-                            <td>Via Código (Merlô)</td>
+                            <td>Via Código</td>
+                            <td>Via Código</td>
                             <td><strong>Via Planilha Google</strong></td>
                             <td>Painel Admin (CMS)</td>
                         </tr>
@@ -141,11 +255,11 @@
                             <td>SQL Dedicado</td>
                         </tr>
                         <tr>
-                            <td><strong>Ideal para</strong></td>
-                            <td>Campanhas / Serviços Rápidos</td>
-                            <td>Empresas / Consultórios</td>
-                            <td>Lojas / Restaurantes</td>
-                            <td>SaaS / Portais Grandes</td>
+                            <td><strong>Entrega Estimada</strong></td>
+                            <td>5 Dias Úteis</td>
+                            <td>10 Dias Úteis</td>
+                            <td>15 Dias Úteis</td>
+                            <td>30+ Dias Úteis</td>
                         </tr>
                     </tbody>
                 </table>
@@ -153,7 +267,7 @@
         </div>
 
         <div class="mobile-tabs-comparison mb-5 d-md-none">
-            <h2 class="section-title text-center mb-4">Comparativo Técnico</h2>
+            <h3 class="text-center mb-4">Detalhes dos Planos</h3>
 
             <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -171,97 +285,40 @@
             </ul>
 
             <div class="tab-content" id="pills-tabContent">
-
                 <div class="tab-pane fade show active" id="content-basic">
                     <ul class="tab-spec-list">
-                        <li>
-                            <span class="spec-label">Estrutura</span>
-                            <span class="spec-value">Até 2 Páginas</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Atualização</span>
-                            <span class="spec-value">Código (Merlô)</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Banco de Dados</span>
-                            <span class="spec-value"><i class="bi bi-x-circle text-danger"></i> Não</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Ideal para</span>
-                            <span class="spec-value text-white">Campanhas / Serviços Rápidos</span>
-                        </li>
+                        <li><span class="spec-label">Páginas</span><span class="spec-value">Até 2</span></li>
+                        <li><span class="spec-label">Atualização</span><span class="spec-value">Código</span></li>
+                        <li><span class="spec-label">Banco de Dados</span><span class="spec-value text-danger">Não</span></li>
                     </ul>
                 </div>
-
                 <div class="tab-pane fade" id="content-standard">
                     <ul class="tab-spec-list">
-                        <li>
-                            <span class="spec-label">Estrutura</span>
-                            <span class="spec-value">Multi-páginas (até 5)</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Atualização</span>
-                            <span class="spec-value">Código (Merlô)</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Banco de Dados</span>
-                            <span class="spec-value"><i class="bi bi-x-circle text-danger"></i> Não</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Ideal para</span>
-                            <span class="spec-value text-white">Empresas / Consultórios</span>
-                        </li>
+                        <li><span class="spec-label">Páginas</span><span class="spec-value">Até 5</span></li>
+                        <li><span class="spec-label">Atualização</span><span class="spec-value">Código</span></li>
+                        <li><span class="spec-label">Banco de Dados</span><span class="spec-value text-danger">Não</span></li>
                     </ul>
                 </div>
-
                 <div class="tab-pane fade" id="content-plus">
                     <ul class="tab-spec-list" style="border-color: var(--accent-highlight);">
-                        <li>
-                            <span class="spec-label">Estrutura</span>
-                            <span class="spec-value">Dinâmico</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Atualização</span>
-                            <span class="spec-value text-info">Planilha Google <i class="bi bi-file-earmark-spreadsheet"></i></span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Banco de Dados</span>
-                            <span class="spec-value text-success">API Google <i class="bi bi-check-circle-fill"></i></span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Ideal para</span>
-                            <span class="spec-value text-white">Lojas / Restaurantes</span>
-                        </li>
+                        <li><span class="spec-label">Páginas</span><span class="spec-value">Até 5 Dinâmicas</span></li>
+                        <li><span class="spec-label">Atualização</span><span class="spec-value text-info">Planilha Google</span></li>
+                        <li><span class="spec-label">Banco de Dados</span><span class="spec-value text-success">API Google</span></li>
                     </ul>
                 </div>
-
                 <div class="tab-pane fade" id="content-pro">
                     <ul class="tab-spec-list">
-                        <li>
-                            <span class="spec-label">Estrutura</span>
-                            <span class="spec-value">Sistema Web</span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Atualização</span>
-                            <span class="spec-value text-warning">Painel Admin <i class="bi bi-laptop"></i></span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Banco de Dados</span>
-                            <span class="spec-value text-warning">SQL Dedicado <i class="bi bi-database"></i></span>
-                        </li>
-                        <li>
-                            <span class="spec-label">Ideal para</span>
-                            <span class="spec-value text-white">SaaS / Portais Grandes</span>
-                        </li>
+                        <li><span class="spec-label">Páginas</span><span class="spec-value">Ilimitadas</span></li>
+                        <li><span class="spec-label">Atualização</span><span class="spec-value text-warning">Painel Admin</span></li>
+                        <li><span class="spec-label">Banco de Dados</span><span class="spec-value text-warning">SQL Dedicado</span></li>
                     </ul>
                 </div>
-
             </div>
         </div>
 
         <div class="text-center mt-5 mb-5 pb-3">
             <p class="text-muted mb-3">Quer ver o que já entregamos?</p>
-            <a href="{{ url_for('portfolio') }}" class="btn btn-merlo btn-lg">
+            <a href="{{ url_for('portfolio') }}" class="btn btn-merlo btn-lg px-5">
                 Ver Portfólio de Sites <i class="bi bi-arrow-right"></i>
             </a>
         </div>
