@@ -335,7 +335,6 @@ def track_click():
 
     return resp
 
-
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
     global BUFFER_CLIQUES
