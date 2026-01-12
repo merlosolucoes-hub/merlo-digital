@@ -283,12 +283,10 @@ def track_click():
         return jsonify({'status': 'ignorado', 'motivo': 'admin'}), 200
 
     # 2. Identificação Inteligente (COOKIES)
-    # Verifica se já existe o cookie 'merlo_uid' no navegador do cliente
     usuario_id = request.cookies.get('merlo_uid')
     is_new_user = False
 
     if not usuario_id:
-        # Se não tem cookie, é um visitante novo!
         usuario_id = str(uuid.uuid4())
         is_new_user = True
 
@@ -298,15 +296,18 @@ def track_click():
     icone = "📱" if user_agent.is_mobile else "💻"
 
     data = request.get_json()
-    hora_atual = datetime.now()
+
+    # --- CORREÇÃO DE HORÁRIO (BRASIL UTC-3) ---
+    # Pegamos o horário UTC do servidor e subtraímos 3 horas
+    hora_atual = datetime.utcnow() - timedelta(hours=3)
 
     novo_clique = {
         "uid": usuario_id,
-        "is_new_user": is_new_user,  # Flag importante para o relatório
+        "is_new_user": is_new_user,
         "botao": data.get('botao', 'Clique Genérico'),
         "pagina": data.get('pagina_origem', '/'),
         "destino": data.get('url_destino', '#'),
-        "hora_fmt": hora_atual.strftime("%H:%M:%S"),
+        "hora_fmt": hora_atual.strftime("%H:%M:%S"),  # Agora vai sair certo
         "ip": user_ip,
         "device_str": f"{icone} {navegador} no {dispositivo}"
     }
@@ -316,40 +317,39 @@ def track_click():
     # 4. Resposta Ultra-Rápida
     response_json = {'status': 'acumulando', 'qtd': len(BUFFER_CLIQUES)}
 
-    # Se encheu o buffer, dispara a thread e limpa a lista IMEDIATAMENTE
     if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
-        lote_atual = list(BUFFER_CLIQUES)  # Copia os dados
-        BUFFER_CLIQUES.clear()  # Limpa a lista principal para receber novos
+        lote_atual = list(BUFFER_CLIQUES)
+        BUFFER_CLIQUES.clear()
 
-        # Dispara o envio em SEGUNDO PLANO (Fire and Forget)
         t = threading.Thread(target=processar_envio_background, args=(lote_atual, "Buffer Cheio"))
         t.start()
 
         response_json = {'status': 'enviando_background'}
 
-    # 5. Injeta o Cookie no navegador do cliente
     resp = make_response(jsonify(response_json))
     if is_new_user:
-        # Cookie válido por 1 ano
         resp.set_cookie('merlo_uid', usuario_id, max_age=31536000, httponly=True, samesite='Lax')
 
     return resp
+
 
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
     global BUFFER_CLIQUES
 
+    # Horário Brasil para o log do terminal
+    hora_br = datetime.utcnow() - timedelta(hours=3)
+    print(f"⏰ Cron Job acionado em {hora_br.strftime('%H:%M:%S')}")
+
     if len(BUFFER_CLIQUES) > 0:
         lote_atual = list(BUFFER_CLIQUES)
         BUFFER_CLIQUES.clear()
 
-        # Também usa Thread no Cron Job para não dar timeout no servidor
         t = threading.Thread(target=processar_envio_background, args=(lote_atual, "Cron Job (Rotina)"))
         t.start()
 
         return jsonify({'status': 'ok', 'acao': 'thread_iniciada'}), 200
     else:
-        # Mantém a atualização do portfólio
         projetos = get_portfolio_data(force_refresh=True)
         return jsonify({'status': 'ok', 'msg': 'Sem cliques. Cache renovado.'}), 200
 
