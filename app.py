@@ -171,28 +171,54 @@ def portfolio():
 @app.route('/contato', methods=['GET', 'POST'])
 def contato():
     if request.method == 'POST':
+        # --- 1. PROTEÇÃO HONEYPOT (ARMADILHA) ---
+        # Se o robô preencher este campo escondido, bloqueamos silenciosamente
+        spam_trap = request.form.get('bairro_confirma')
+        if spam_trap:
+            print(f"BOT BLOQUEADO! Tentou preencher o honeypot.")
+            # Fingimos que deu certo para o robô ir embora feliz e não tentar de novo
+            flash('Solicitação enviada com sucesso!', 'success')
+            return redirect(url_for('contato'))
+
+        # --- 2. CAPTURA DE DADOS ---
         nome = request.form.get('nome')
         email_cliente = request.form.get('email')
         empresa = request.form.get('empresa')
         mensagem_cliente = request.form.get('mensagem')
+        # Telefone não é obrigatório no form, mas se vier, pegamos
+        telefone = request.form.get('telefone')
+
+        # --- 3. VALIDAÇÃO DE SEGURANÇA (O que você pediu) ---
+        if not email_cliente or '@' not in email_cliente or '.' not in email_cliente:
+            print(f"SPAM RECUSADO: E-mail inválido ({email_cliente})")
+            flash('O e-mail informado é inválido. Por favor, verifique.', 'danger')
+            return redirect(url_for('contato'))
+
+        # Se passou das barreiras acima, tenta enviar
         email_destino = os.getenv('EMAIL_DESTINO')
 
         try:
             params = {
                 "from": "Merlô Digital <contato@merlodigital.com>",
                 "to": [email_destino],
-                "subject": f"Novo Lead MERLÔ: {nome} - {empresa}",
+                "subject": f"🚀 Lead Site: {nome} - {empresa}",
                 "html": f"""
-                <h3>NOVA SOLICITAÇÃO DE CONTATO</h3>
-                <p><strong>Nome:</strong> {nome}</p>
-                <p><strong>Empresa:</strong> {empresa}</p>
-                <p><strong>E-mail:</strong> {email_cliente}</p>
-                <hr>
-                <p><strong>Mensagem:</strong><br>{mensagem_cliente}</p>
+                <div style="font-family: Arial, color: #333;">
+                    <h2 style="color: #16305D;">Nova Oportunidade Comercial</h2>
+                    <hr>
+                    <p><strong>👤 Nome:</strong> {nome}</p>
+                    <p><strong>🏢 Empresa:</strong> {empresa}</p>
+                    <p><strong>📧 E-mail:</strong> {email_cliente}</p>
+                    <p><strong>📱 Telefone:</strong> {telefone}</p>
+                    <hr>
+                    <p><strong>💬 Mensagem:</strong><br>{mensagem_cliente}</p>
+                    <br>
+                    <small style="color: #888;">Enviado via Site Merlô Digital (Validado)</small>
+                </div>
                 """
             }
             resend.Emails.send(params)
-            flash('Mensagem enviada com sucesso! Em breve entraremos em contato.', 'success')
+            flash('Solicitação enviada com sucesso! Em breve entraremos em contato.', 'success')
         except Exception as e:
             print(f"Erro ao enviar e-mail: {e}")
             flash('Erro ao enviar mensagem. Tente novamente ou nos chame no WhatsApp.', 'danger')
