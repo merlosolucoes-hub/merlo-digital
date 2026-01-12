@@ -2,6 +2,8 @@ import os
 import csv
 import requests
 import resend
+import threading # NOVO: Para não travar o site
+import uuid      # NOVO: Para gerar ID do visitante
 from io import StringIO
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -19,18 +21,40 @@ LIMITE_BUFFER_IMEDIATO = 10
 PORTFOLIO_CACHE = []
 ULTIMA_ATUALIZACAO_PORTFOLIO = None
 CACHE_TIMEOUT_HORAS = 1
-MEUS_IPS_IGNORADOS = ['192.168.0.101', '192']
+MEUS_IPS_IGNORADOS = ['177.5.139.35']
 HOST_URL = "https://merlodigital.com"
 
-def get_location_from_ip(ip_address):
+
+def get_location_data_rich(ip_address):
+    """
+    Busca dados enriquecidos. Não traz rua exata (impossível via IP),
+    mas traz o Provedor (ISP) e a Empresa (Org), que valem ouro no B2B.
+    """
     try:
-        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=1)
+        # Adicionamos fields para pedir ISP e Org
+        url = f'http://ip-api.com/json/{ip_address}?fields=status,message,countryCode,regionName,city,isp,org,zip'
+        response = requests.get(url, timeout=3)  # Timeout maior pois roda em thread
         data = response.json()
+
         if data['status'] == 'success':
-            return f"{data['city']}/{data['regionName']} ({data['countryCode']})"
-        return "Local Desconhecido"
-    except:
-        return "N/A"
+            # Formata: "Blumenau/SC (BR)"
+            local_base = f"{data['city']}/{data['regionName']} ({data['countryCode']})"
+
+            # Formata: "Unifique Telecom" ou "Banco do Brasil S.A."
+            # Se ISP e Org forem iguais, mostra só um.
+            detalhe_rede = data['org'] if data['org'] else data['isp']
+            if data['isp'] and data['isp'] != data['org']:
+                detalhe_rede = f"{data['isp']} ({data['org']})"
+
+            return {
+                "local": local_base,
+                "rede": detalhe_rede,
+                "zip": data['zip']  # CEP Genérico da região
+            }
+        return {"local": "Local Desconhecido", "rede": "N/A", "zip": ""}
+    except Exception as e:
+        print(f"Erro no GeoIP: {e}")
+        return {"local": "N/A", "rede": "N/A", "zip": ""}
 
 def get_portfolio_data(force_refresh=False):
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
@@ -67,64 +91,72 @@ def get_portfolio_data(force_refresh=False):
         print(f"Erro ao buscar portfólio: {e}")
         return PORTFOLIO_CACHE if PORTFOLIO_CACHE else []
 
-def enviar_buffer_por_email(motivo):
-    global BUFFER_CLIQUES
-    email_destino = os.getenv('EMAIL_DESTINO')
 
-    if not BUFFER_CLIQUES:
-        return False
+# --- FUNÇÃO DE ENVIO ASSÍNCRONO (RODA EM THREAD) ---
+def processar_envio_background(lista_cliques, motivo):
+    """
+    Roda em Thread separada. O usuário navega rápido enquanto o servidor
+    trabalha pesado aqui (GeoIP + E-mail) sem travar ninguém.
+    """
+    email_destino = os.getenv('EMAIL_DESTINO')
+    if not lista_cliques or not email_destino:
+        return
 
     itens_html = ""
-    for item in BUFFER_CLIQUES:
-        local = get_location_from_ip(item['ip'])
+    for item in lista_cliques:
+        # GeoIP detalhado roda aqui, sem pressa
+        geo_data = get_location_data_rich(item['ip'])
+
         cor_titulo = "#16305D"
+        icone_status = "🖱️"
+        bg_card = "#f8f9fa"
+
+        # Destaque visual para conversões
         if "WhatsApp" in item['botao'] or "Contato" in item['botao']:
             cor_titulo = "#25D366"
+            icone_status = "💬"
+            bg_card = "#e8f5e9"  # Fundo verdinho leve
+
+        tag_visitante = "👤 Novo" if item.get('is_new_user') else "🔄 Retorno"
 
         itens_html += f"""
-        <li style="margin-bottom: 15px; border-left: 4px solid {cor_titulo}; padding-left: 10px; list-style: none;">
-            <div style="font-size: 14px; font-weight: bold; color: {cor_titulo};">
-                {item['botao']}
+        <li style="margin-bottom: 15px; border-left: 4px solid {cor_titulo}; list-style: none; background-color: {bg_card}; padding: 12px; border-radius: 6px; font-family: sans-serif;">
+            <div style="font-size: 14px; font-weight: bold; color: {cor_titulo}; display: flex; justify-content: space-between; align-items: center;">
+                <span>{icone_status} {item['botao']}</span>
+                <span style="font-size: 10px; background: #fff; border: 1px solid #ddd; padding: 2px 8px; border-radius: 12px; color: #555; text-transform: uppercase;">{tag_visitante}</span>
             </div>
-            <div style="font-size: 12px; color: #555; line-height: 1.5;">
-                🕒 {item['hora_fmt']} <br>
-                🌍 <strong>{local}</strong> <span style="color:#999">IP: {item['ip']}</span> <br>
-                🔧 {item['device_str']} <br>
-                🔗 {item['pagina']} &rarr; {item['destino']}
+            <div style="font-size: 12px; color: #555; line-height: 1.6; margin-top: 8px;">
+                🕒 <strong>Hora:</strong> {item['hora_fmt']} <br>
+                🌍 <strong>Local:</strong> {geo_data['local']} <br>
+                🏢 <strong>Rede/Empresa:</strong> {geo_data['rede']} <br>
+                🔧 <strong>Device:</strong> {item['device_str']} <br>
+                🔗 <a href="{HOST_URL}{item['pagina']}" style="color: #666;">{item['pagina']}</a> &rarr; {item['destino']}
             </div>
         </li>
-        <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
         """
 
     try:
         resend.Emails.send({
             "from": "Merlô Tracker <merlotracker@merlodigital.com>",
             "to": [email_destino],
-            "subject": f"🎯 {len(BUFFER_CLIQUES)} Novos Leads/Cliques no Site",
+            "subject": f"🎯 {len(lista_cliques)} Interações (Merlô Track v3)",
             "html": f"""
             <div style="font-family: sans-serif; color: #333; max-width: 600px;">
-                <h3 style="color: #16305D; border-bottom: 2px solid #16305D; padding-bottom: 10px;">
-                    Relatório de Tráfego
-                </h3>
-                <p style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-size: 12px;">
-                    <strong>Status:</strong> {motivo}<br>
-                    <strong>Filtro:</strong> Robôs e IPs internos ignorados.
-                </p>
-                <ul style="padding: 0;">
+                <div style="padding: 15px; border-bottom: 2px solid #16305D;">
+                    <h3 style="color: #16305D; margin: 0;">Relatório de Inteligência</h3>
+                    <p style="font-size: 12px; color: #777; margin: 5px 0 0 0;">
+                        Motivo: {motivo} • Processamento Assíncrono
+                    </p>
+                </div>
+                <ul style="padding: 0; margin-top: 20px;">
                     {itens_html}
                 </ul>
-                <div style="text-align: center; margin-top: 20px; font-size: 11px; color: #aaa;">
-                    Merlô Digital Intelligence System v2.0
-                </div>
             </div>
             """
         })
-        print(f"Relatório enviado com sucesso!")
-        BUFFER_CLIQUES.clear()
-        return True
+        print(f"✅ E-mail de relatório enviado (Background).")
     except Exception as e:
-        print(f"Erro no envio: {e}")
-        return False
+        print(f"❌ Erro ao enviar e-mail: {e}")
 
 @app.route('/')
 def index():
@@ -231,10 +263,12 @@ def contato():
         description="Entre em contato com a Merlô Digital. Atendimento via WhatsApp ou E-mail para tirar seu projeto do papel."
     )
 
+
 @app.route('/api/track-click', methods=['POST'])
 def track_click():
     global BUFFER_CLIQUES
 
+    # 1. Filtros de Segurança
     if request.headers.getlist("X-Forwarded-For"):
         user_ip = request.headers.getlist("X-Forwarded-For")[0]
     else:
@@ -244,66 +278,81 @@ def track_click():
     user_agent = parse(ua_string)
 
     if user_agent.is_bot:
-        return jsonify({'status': 'ignorado', 'motivo': 'eh_robo'}), 200
-
+        return jsonify({'status': 'ignorado', 'motivo': 'robo'}), 200
     if user_ip in MEUS_IPS_IGNORADOS:
-        return jsonify({'status': 'ignorado', 'motivo': 'eh_o_dono'}), 200
+        return jsonify({'status': 'ignorado', 'motivo': 'admin'}), 200
 
+    # 2. Identificação Inteligente (COOKIES)
+    # Verifica se já existe o cookie 'merlo_uid' no navegador do cliente
+    usuario_id = request.cookies.get('merlo_uid')
+    is_new_user = False
+
+    if not usuario_id:
+        # Se não tem cookie, é um visitante novo!
+        usuario_id = str(uuid.uuid4())
+        is_new_user = True
+
+    # 3. Coleta de Dados
     dispositivo = f"{user_agent.os.family} {user_agent.os.version_string}"
     navegador = f"{user_agent.browser.family}"
-
-    icone = "💻"
-    if user_agent.is_mobile:
-        icone = "📱"
-    elif user_agent.is_tablet:
-        icone = "📟"
-
-    origem = request.headers.get('Referer')
-    if not origem or HOST_URL in origem:
-        origem_fmt = "Acesso Direto / Navegação Interna"
-    else:
-        origem_fmt = f"Veio de: {origem}"
+    icone = "📱" if user_agent.is_mobile else "💻"
 
     data = request.get_json()
     hora_atual = datetime.now()
 
     novo_clique = {
+        "uid": usuario_id,
+        "is_new_user": is_new_user,  # Flag importante para o relatório
         "botao": data.get('botao', 'Clique Genérico'),
         "pagina": data.get('pagina_origem', '/'),
         "destino": data.get('url_destino', '#'),
-        "hora_fmt": hora_atual.strftime("%H:%M:%S (%d/%m)"),
+        "hora_fmt": hora_atual.strftime("%H:%M:%S"),
         "ip": user_ip,
-        "device_str": f"{icone} {navegador} no {dispositivo}",
-        "origem": origem_fmt
+        "device_str": f"{icone} {navegador} no {dispositivo}"
     }
 
     BUFFER_CLIQUES.append(novo_clique)
 
-    if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
-        enviar_buffer_por_email(motivo="Buffer Cheio (Alta Demanda)")
-        return jsonify({'status': 'enviado', 'motivo': 'buffer_cheio'}), 200
+    # 4. Resposta Ultra-Rápida
+    response_json = {'status': 'acumulando', 'qtd': len(BUFFER_CLIQUES)}
 
-    return jsonify({'status': 'acumulando', 'qtd': len(BUFFER_CLIQUES)}), 200
+    # Se encheu o buffer, dispara a thread e limpa a lista IMEDIATAMENTE
+    if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
+        lote_atual = list(BUFFER_CLIQUES)  # Copia os dados
+        BUFFER_CLIQUES.clear()  # Limpa a lista principal para receber novos
+
+        # Dispara o envio em SEGUNDO PLANO (Fire and Forget)
+        t = threading.Thread(target=processar_envio_background, args=(lote_atual, "Buffer Cheio"))
+        t.start()
+
+        response_json = {'status': 'enviando_background'}
+
+    # 5. Injeta o Cookie no navegador do cliente
+    resp = make_response(jsonify(response_json))
+    if is_new_user:
+        # Cookie válido por 1 ano
+        resp.set_cookie('merlo_uid', usuario_id, max_age=31536000, httponly=True, samesite='Lax')
+
+    return resp
+
 
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
     global BUFFER_CLIQUES
-    print(f"Cron Job acionado em {datetime.now()}")
 
     if len(BUFFER_CLIQUES) > 0:
-        sucesso = enviar_buffer_por_email(motivo="Cron Job (10 min)")
-        if sucesso:
-            return jsonify({'status': 'ok', 'acao': 'email_enviado', 'qtd': len(BUFFER_CLIQUES)}), 200
-        else:
-            return jsonify({'status': 'erro', 'acao': 'falha_envio_email'}), 500
+        lote_atual = list(BUFFER_CLIQUES)
+        BUFFER_CLIQUES.clear()
+
+        # Também usa Thread no Cron Job para não dar timeout no servidor
+        t = threading.Thread(target=processar_envio_background, args=(lote_atual, "Cron Job (Rotina)"))
+        t.start()
+
+        return jsonify({'status': 'ok', 'acao': 'thread_iniciada'}), 200
     else:
+        # Mantém a atualização do portfólio
         projetos = get_portfolio_data(force_refresh=True)
-        return jsonify({
-            'status': 'ok',
-            'acao': 'cache_atualizado',
-            'msg': 'Sem cliques para enviar. Cache de portfólio renovado.',
-            'projetos_carregados': len(projetos)
-        }), 200
+        return jsonify({'status': 'ok', 'msg': 'Sem cliques. Cache renovado.'}), 200
 
 @app.route('/sitemap.xml')
 def sitemap():
