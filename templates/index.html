@@ -1,283 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="layout-wrapper">
 
-    <section class="hero-section container position-relative">
-        <div class="hero-glow"></div>
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
 
-        <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
-            <div class="col-lg-9 text-center z-2">
+    <div class="col-12 col-md-6 col-lg-5 col-xl-4 position-relative">
 
-                <div class="hero-badge mb-4 fade-in-up">
-                    <i class="bi bi-code-square text-info me-2"></i> Python Software House
-                </div>
+        <div class="login-blob blob-1" style="width: 300px; height: 300px; top: -50px; left: -50px;"></div>
+        <div class="login-blob blob-2" style="width: 250px; height: 250px; bottom: -50px; right: -50px;"></div>
 
-                <h1 class="hero-title display-3 fw-black mb-4 fade-in-up delay-1">
-                    Engenharia de Software <br>
-                    <span class="text-gradient">Para Negócios Reais</span>
-                </h1>
+        <div class="login-card fade-in-up w-100">
 
-                <p class="hero-subtitle lead text-muted mb-5 fade-in-up delay-2 mx-auto" style="max-width: 750px;">
-                    Chega de sites genéricos. Desenvolvemos ecossistemas digitais de alta performance,
-                    seguros e focados em conversão. Transformamos a complexidade do seu negócio em código limpo.
-                </p>
-
-                <div class="hero-btns d-flex justify-content-center gap-3 fade-in-up delay-3 flex-wrap">
-                    <a href="https://wa.me/5547992539750?text=Ol%C3%A1!+Gostaria+de+iniciar+um+projeto+com+a+Merl%C3%B4."
-                       target="_blank"
-                       class="btn btn-merlo btn-lg px-5">
-                        Iniciar Projeto <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
-
-                    <a href="#diferenciais" class="btn btn-outline-light btn-lg px-5">
-                        Por que a Merlô?
-                    </a>
-                </div>
-
-                <div class="tech-strip mt-5 pt-4 fade-in-up delay-4 border-top border-secondary opacity-75">
-                    <p class="small text-muted text-uppercase tracking-widest mb-3">Powering Next-Gen Business with</p>
-                    <div class="d-flex justify-content-center gap-4 align-items-center flex-wrap grayscale-hover">
-                        <span class="tech-tag"><i class="bi bi-filetype-py"></i> Python</span>
-                        <span class="tech-tag"><i class="bi bi-database-fill"></i> SQL</span>
-                        <span class="tech-tag"><i class="bi bi-google"></i> Google Cloud</span>
-                        <span class="tech-tag"><i class="bi bi-shield-lock-fill"></i> SSL Secure</span>
-                        <span class="tech-tag"><i class="bi bi-graph-up-arrow"></i> Analytics</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="diferenciais" class="py-5">
-        <div class="container py-5">
-            <div class="row mb-5 text-center">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="section-title">Não é só código. É <span class="text-info">Estratégia.</span></h2>
-                    <p class="text-muted">A maioria das agências entrega layouts. Nós entregamos infraestrutura.</p>
-                </div>
+            <div class="login-brand-wrapper">
+                <span class="login-brand-main">My Ô</span>
+                <span class="login-brand-sub">Merlô Digital System</span>
             </div>
 
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="feature-card p-4 h-100">
-                        <div class="icon-circle mb-4">
-                            <i class="bi bi-shield-check text-info"></i>
-                        </div>
-                        <h4>Segurança Enterprise</h4>
-                        <p class="text-muted">
-                            Aplicações blindadas contra ataques comuns. Utilizamos criptografia de ponta e boas práticas de segurança (OWASP) para proteger os dados da sua empresa e dos seus clientes.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card p-4 h-100 highlight-border">
-                        <div class="icon-circle mb-4">
-                            <i class="bi bi-lightning-charge-fill text-warning"></i>
-                        </div>
-                        <h4>Performance Extrema</h4>
-                        <p class="text-muted">
-                            Nossos sites não "carregam", eles aparecem. Otimização no nível do servidor, compressão de imagens inteligente e código Python leve para garantir nota máxima no Google.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card p-4 h-100">
-                        <div class="icon-circle mb-4">
-                            <i class="bi bi-cpu-fill text-info"></i>
-                        </div>
-                        <h4>Escalabilidade Real</h4>
-                        <p class="text-muted">
-                            Seu negócio cresceu? O sistema cresce junto. Arquitetura modular que permite adicionar novas funcionalidades (como área de membros ou e-commerce) sem refazer tudo do zero.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="tracking-section py-5 my-5 position-relative overflow-hidden">
-        <div class="container position-relative z-2">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-5 mb-lg-0">
-                    <span class="badge bg-info text-dark mb-3 px-3 py-2 rounded-pill fw-bold">TECNOLOGIA EXCLUSIVA</span>
-                    <h2 class="display-5 fw-bold mb-4">Conheça o <span class="text-gradient">Merlô Tracking</span></h2>
-                    <p class="lead text-muted mb-4">
-                        Enquanto outros te dão "achismos", nós te damos dados. Nosso sistema proprietário monitora quem entra no seu site em tempo real.
-                    </p>
-                    <ul class="list-unstyled text-muted mb-4">
-                        <li class="mb-3 d-flex align-items-start">
-                            <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
-                            <div>
-                                <strong>Rastreamento de Leads:</strong> Saiba exatamente quem clicou no botão do WhatsApp.
-                            </div>
-                        </li>
-                        <li class="mb-3 d-flex align-items-start">
-                            <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
-                            <div>
-                                <strong>Geolocalização Precisa:</strong> Descubra de qual cidade e estado seus clientes estão acessando.
-                            </div>
-                        </li>
-                        <li class="mb-3 d-flex align-items-start">
-                            <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
-                            <div>
-                                <strong>Device Fingerprint:</strong> Identificamos se o acesso é iPhone, Android ou Desktop para otimizar campanhas.
-                            </div>
-                        </li>
-                    </ul>
-                    <a href="{{ url_for('servicos_website') }}" class="btn btn-outline-info rounded-pill px-4">
-                        Ver Planos com Tracking
-                    </a>
-                </div>
-                <div class="col-lg-6">
-                    <div class="tracking-visual p-4 bg-dark border border-secondary rounded-4 shadow-lg">
-                        <div class="d-flex justify-content-between mb-4 border-bottom border-secondary pb-3">
-                            <span class="text-white fw-bold"><i class="bi bi-activity"></i> Live Traffic</span>
-                            <span class="text-success small">● Online</span>
-                        </div>
-                        <div class="tracking-row mb-3 p-3 rounded bg-opacity-10 bg-white d-flex align-items-center gap-3">
-                            <i class="bi bi-whatsapp text-success fs-4"></i>
-                            <div>
-                                <div class="text-white small fw-bold">Clique no WhatsApp</div>
-                                <div class="text-muted x-small">Blumenau, SC • iPhone 14 • Há 2 min</div>
-                            </div>
-                        </div>
-                        <div class="tracking-row mb-3 p-3 rounded bg-opacity-10 bg-white d-flex align-items-center gap-3">
-                            <i class="bi bi-telephone-fill text-info fs-4"></i>
-                            <div>
-                                <div class="text-white small fw-bold">Ligação Telefônica</div>
-                                <div class="text-muted x-small">Indaial, SC • Windows 11 • Há 15 min</div>
-                            </div>
-                        </div>
-                        <div class="tracking-row p-3 rounded bg-opacity-10 bg-white d-flex align-items-center gap-3 opacity-50">
-                            <i class="bi bi-geo-alt-fill text-danger fs-4"></i>
-                            <div>
-                                <div class="text-white small fw-bold">Abriu Mapa</div>
-                                <div class="text-muted x-small">Gaspar, SC • Android • Há 32 min</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="py-5">
-        <div class="container py-5">
-            <div class="text-center mb-5">
-                <h2 class="mb-3">Do Conceito ao Código</h2>
-                <p class="text-muted">Nosso processo ágil com <strong>Garantia de Aprovação</strong>. O site só vai ao ar quando você disser "Sim".</p>
+            <div class="text-center mb-4">
+                <h5 class="text-white fw-bold">Bem-vindo</h5>
+                <p class="text-secondary small">Insira suas credenciais para acessar.</p>
             </div>
 
-            <div class="process-timeline position-relative">
-                <div class="row justify-content-center g-4">
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 text-center position-relative process-step">
-                        <div class="step-icon mx-auto mb-3">1</div>
-                        <h5 class="text-white">Discovery</h5>
-                        <p class="small text-muted px-2">Entendemos a dor do negócio e definimos a arquitetura.</p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 text-center position-relative process-step">
-                        <div class="step-icon mx-auto mb-3">2</div>
-                        <h5 class="text-white">Design & UX</h5>
-                        <p class="small text-muted px-2">Criação do layout focado na experiência e conversão.</p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 text-center position-relative process-step">
-                        <div class="step-icon mx-auto mb-3">3</div>
-                        <h5 class="text-white">Dev & Code</h5>
-                        <p class="small text-muted px-2">Programação robusta em Python, APIs e Bancos de Dados.</p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 text-center position-relative process-step">
-                        <div class="step-icon decision-icon mx-auto mb-3">
-                            <i class="bi bi-sliders"></i>
-                        </div>
-                        <h5 class="text-info">Validação</h5>
-                        <p class="small text-white-50 px-2">
-                            Apresentação e ajustes finais. O projeto só avança com o seu "De Acordo".
-                        </p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 text-center position-relative process-step">
-                        <div class="step-icon mx-auto mb-3 bg-success border-success text-white">
-                            <i class="bi bi-rocket-takeoff-fill"></i>
-                        </div>
-                        <h5 class="text-white">Deploy</h5>
-                        <p class="small text-muted px-2">Configuração de servidor, segurança SSL e Lançamento.</p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-5 bg-darker rounded-section mx-3 mx-lg-5">
-        <div class="container py-4">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="text-center mb-5">Perguntas Frequentes</h2>
-
-                    <div class="accordion accordion-flush" id="faqAccordion">
-
-                        <div class="accordion-item bg-transparent border-bottom border-secondary">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                    Por que usar Python e não WordPress?
-                                </button>
-                            </h2>
-                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    O WordPress é ótimo para blogs, mas é pesado e vulnerável. O Python nos permite criar sistemas <strong>sob medida</strong>, muito mais rápidos, seguros e escaláveis, sem depender de plugins que deixam o site lento.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item bg-transparent border-bottom border-secondary">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                    Vocês fazem a manutenção depois?
-                                </button>
-                            </h2>
-                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    Sim! Temos planos mensais acessíveis que incluem hospedagem de alta performance, atualizações de segurança e relatórios do <strong>Merlô Tracking</strong>.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item bg-transparent border-bottom border-secondary">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                    Quanto tempo demora para ficar pronto?
-                                </button>
-                            </h2>
-                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    Sites institucionais (Planos Basic e Standard) são entregues em média entre <strong>5 a 10 dias úteis</strong>. Sistemas complexos e ERPs dependem do escopo do projeto.
-                                </div>
-                            </div>
-                        </div>
-
+            <form method="POST">
+                <div class="mb-4">
+                    <label class="ms-1 mb-2">E-mail</label>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-envelope-at-fill"></i></span>
+                        <input type="email" name="email" class="form-control-premium" placeholder="seu@email.com" required autocomplete="email">
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <section class="py-5 text-center">
-        <div class="container py-5">
-            <div class="cta-box p-5 rounded-4 border border-info border-opacity-25" style="background: linear-gradient(45deg, var(--bg-darker), #0b1a38);">
-                <h2 class="display-6 fw-bold mb-3">Seu negócio merece tecnologia de verdade.</h2>
-                <p class="lead text-muted mb-4">Pare de perder vendas por causa de sites lentos ou sistemas travados.</p>
-                <a href="{{ url_for('contato') }}" class="btn btn-merlo btn-lg px-5 shadow-neon">
-                    Falar com um Engenheiro
+                <div class="mb-4">
+                    <label class="ms-1 mb-2">Senha</label>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-shield-lock-fill"></i></span>
+                        <input type="password" name="password" class="form-control-premium" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="d-grid mt-5">
+                    <button class="btn btn-login-glow" type="submit">
+                        ACESSAR SISTEMA <i class="bi bi-box-arrow-in-right ms-2"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-10">
+                <a href="https://merlodigital.com" class="small text-secondary text-decoration-none hover-white transition-300">
+                    Ir para site institucional
                 </a>
             </div>
         </div>
-    </section>
-
+    </div>
 </div>
+
+<script>
+    // Script para efeito de foco nos inputs
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputs = document.querySelectorAll('.form-control-premium');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.style.borderColor = 'var(--accent-color)';
+                input.parentElement.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                input.parentElement.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+            });
+        });
+    });
+</script>
 {% endblock %}

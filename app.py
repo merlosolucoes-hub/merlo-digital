@@ -2,13 +2,16 @@ import os
 import csv
 import requests
 import resend
-import threading # NOVO: Para não travar o site
-import uuid      # NOVO: Para gerar ID do visitante
+import threading  # NOVO: Para não travar o site
+import uuid  # NOVO: Para gerar ID do visitante
 from io import StringIO
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
 from user_agents import parse
+
+# --- ALTERAÇÃO AQUI: Importando funções do My O System ---
+from google_utils import get_connections_sheet, get_sheet_data
 
 load_dotenv()
 
@@ -56,7 +59,12 @@ def get_location_data_rich(ip_address):
         print(f"Erro no GeoIP: {e}")
         return {"local": "N/A", "rede": "N/A", "zip": ""}
 
+
 def get_portfolio_data(force_refresh=False):
+    """
+    ATUALIZADO: Busca dados diretamente do Sistema My O (Google Sheets).
+    Procura por uma tabela que contenha 'Portfolio' no nome dentro das conexões.
+    """
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
     agora = datetime.now()
 
@@ -65,30 +73,44 @@ def get_portfolio_data(force_refresh=False):
         if tempo_passado < timedelta(hours=CACHE_TIMEOUT_HORAS):
             return PORTFOLIO_CACHE
 
-    url = os.getenv('PORTFOLIO_SHEET_URL')
-    if not url:
-        return []
-
     try:
-        print("Buscando dados atualizados no Google Sheets...")
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
+        print("🔌 Conectando ao My O System para buscar Portfolio...")
 
-        csv_file = StringIO(response.content.decode('utf-8'))
-        reader = csv.DictReader(csv_file)
+        # 1. Pega a lista de conexões da Planilha Mestra
+        conn_ws = get_connections_sheet()
+        if not conn_ws:
+            print("❌ Erro: Não foi possível conectar à Mestra.")
+            return PORTFOLIO_CACHE or []
 
-        projects = []
-        for row in reader:
-            clean_row = {k.strip(): v.strip() for k, v in row.items()}
-            projects.append(clean_row)
+        records = conn_ws.get_all_records()
+        portfolio_tab_id = None
+
+        # 2. Procura a tabela certa (Ex: 'Portfolio', 'Meus Projetos', etc.)
+        for row in records:
+            # Verifica se o nome da tabela contém 'Portfolio' (ignora maiúsculas/minúsculas)
+            if 'portfolio' in str(row['Sheet_Name']).lower():
+                portfolio_tab_id = row['Sheet_ID']
+                print(f"✅ Tabela encontrada: {row['Sheet_Name']} (ID: {portfolio_tab_id})")
+                break
+
+        if not portfolio_tab_id:
+            print("⚠️ Aviso: Nenhuma tabela com nome 'Portfolio' encontrada no My O.")
+            return PORTFOLIO_CACHE or []
+
+        # 3. Pega os dados da aba específica usando a função do google_utils
+        projects = get_sheet_data(portfolio_tab_id)
+
+        # Filtra linhas vazias se houver (segurança extra)
+        projects = [p for p in projects if p.get('Título') or p.get('Nome')]
 
         PORTFOLIO_CACHE = projects
         ULTIMA_ATUALIZACAO_PORTFOLIO = agora
-        print(f"Portfólio atualizado! {len(projects)} projetos carregados.")
+        print(f"🚀 Portfólio atualizado via My O! {len(projects)} projetos carregados.")
 
         return projects
+
     except Exception as e:
-        print(f"Erro ao buscar portfólio: {e}")
+        print(f"❌ Erro crítico ao buscar portfólio no My O: {e}")
         return PORTFOLIO_CACHE if PORTFOLIO_CACHE else []
 
 
@@ -158,6 +180,7 @@ def processar_envio_background(lista_cliques, motivo):
     except Exception as e:
         print(f"❌ Erro ao enviar e-mail: {e}")
 
+
 @app.route('/')
 def index():
     return render_template(
@@ -165,6 +188,7 @@ def index():
         title="Merlô Digital | Engenharia de Software e Sites",
         description="Especialistas em desenvolvimento web de alta performance. Transformamos processos complexos em sistemas seguros e escaláveis com Python."
     )
+
 
 @app.route('/servicos')
 def servicos():
@@ -174,6 +198,7 @@ def servicos():
         description="Conheça nossas soluções em criação de sites, sistemas web, automação e dashboards administrativos personalizados."
     )
 
+
 @app.route('/servicos/website')
 def servicos_website():
     return render_template(
@@ -182,6 +207,7 @@ def servicos_website():
         description="Sites rápidos, otimizados para SEO e responsivos. Do site institucional básico até catálogos dinâmicos integrados ao Google Sheets."
     )
 
+
 @app.route('/servicos/sistemas')
 def servicos_sistemas():
     return render_template(
@@ -189,6 +215,7 @@ def servicos_sistemas():
         title="Desenvolvimento de Sistemas Web e ERPs | Merlô Digital",
         description="Sistemas sob medida em Python. Dashboards, controle de estoque, área de membros e automação de processos empresariais."
     )
+
 
 @app.route('/portfolio')
 def portfolio():
@@ -199,6 +226,7 @@ def portfolio():
         description="Veja nossos casos de sucesso. Sites institucionais e sistemas complexos desenvolvidos para gerar resultados reais.",
         projects=projects
     )
+
 
 @app.route('/contato', methods=['GET', 'POST'])
 def contato():
@@ -353,6 +381,7 @@ def cron_job():
         projetos = get_portfolio_data(force_refresh=True)
         return jsonify({'status': 'ok', 'msg': 'Sem cliques. Cache renovado.'}), 200
 
+
 @app.route('/sitemap.xml')
 def sitemap():
     pages = ['/', '/servicos', '/servicos/website', '/servicos/sistemas', '/portfolio', '/contato']
@@ -374,12 +403,14 @@ def sitemap():
     response.headers["Content-Type"] = "application/xml"
     return response
 
+
 @app.route('/robots.txt')
 def robots():
     lines = ["User-agent: *", "Disallow: ", f"Sitemap: {HOST_URL}/sitemap.xml"]
     response = make_response("\n".join(lines))
     response.headers["Content-Type"] = "text/plain"
     return response
+
 
 @app.route('/termos&privacidade')
 def termos():
@@ -388,6 +419,7 @@ def termos():
         title="Termos de Uso e Privacidade | Merlô Digital",
         description="Transparência total. Nossas políticas de privacidade, LGPD e termos de serviço."
     )
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
