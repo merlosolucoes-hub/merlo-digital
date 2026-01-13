@@ -62,8 +62,8 @@ def get_location_data_rich(ip_address):
 
 def get_portfolio_data(force_refresh=False):
     """
-    ATUALIZADO: Busca dados diretamente do Sistema My O (Google Sheets).
-    Procura por uma tabela que contenha 'Portfolio' no nome dentro das conexões.
+    Busca dados do Sistema My O e mapeia as colunas corretamente.
+    Colunas esperadas na planilha: Título, Descrição, Link do site, Logo, Tipo
     """
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
     agora = datetime.now()
@@ -76,7 +76,7 @@ def get_portfolio_data(force_refresh=False):
     try:
         print("🔌 Conectando ao My O System para buscar Portfolio...")
 
-        # 1. Pega a lista de conexões da Planilha Mestra
+        # 1. Conecta na Mestra
         conn_ws = get_connections_sheet()
         if not conn_ws:
             print("❌ Erro: Não foi possível conectar à Mestra.")
@@ -85,9 +85,8 @@ def get_portfolio_data(force_refresh=False):
         records = conn_ws.get_all_records()
         portfolio_tab_id = None
 
-        # 2. Procura a tabela certa (Ex: 'Portfolio', 'Meus Projetos', etc.)
+        # 2. Procura tabela de Portfolio
         for row in records:
-            # Verifica se o nome da tabela contém 'Portfolio' (ignora maiúsculas/minúsculas)
             if 'portfolio' in str(row['Sheet_Name']).lower():
                 portfolio_tab_id = row['Sheet_ID']
                 print(f"✅ Tabela encontrada: {row['Sheet_Name']} (ID: {portfolio_tab_id})")
@@ -97,15 +96,29 @@ def get_portfolio_data(force_refresh=False):
             print("⚠️ Aviso: Nenhuma tabela com nome 'Portfolio' encontrada no My O.")
             return PORTFOLIO_CACHE or []
 
-        # 3. Pega os dados da aba específica usando a função do google_utils
-        projects = get_sheet_data(portfolio_tab_id)
+        # 3. Pega os dados crus
+        raw_data = get_sheet_data(portfolio_tab_id)
 
-        # Filtra linhas vazias se houver (segurança extra)
-        projects = [p for p in projects if p.get('Título') or p.get('Nome')]
+        # 4. Mapeia para o formato do site
+        projects = []
+        for row in raw_data:
+            # Só processa se tiver Título preenchido
+            if not row.get('Título'):
+                continue
+
+            # AQUI ESTÁ O MAPEAMENTO QUE VOCÊ PEDIU:
+            project = {
+                'Título': row.get('Título', '').strip(),
+                'Descrição': row.get('Descrição', '').strip(),
+                'Link': row.get('Link do site', '').strip(),  # Traduz "Link do site" para "Link"
+                'Logo': row.get('Logo', '').strip(),
+                'Tipo': row.get('Tipo', '').strip()
+            }
+            projects.append(project)
 
         PORTFOLIO_CACHE = projects
         ULTIMA_ATUALIZACAO_PORTFOLIO = agora
-        print(f"🚀 Portfólio atualizado via My O! {len(projects)} projetos carregados.")
+        print(f"🚀 Portfólio atualizado! {len(projects)} projetos carregados.")
 
         return projects
 
