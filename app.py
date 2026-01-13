@@ -62,8 +62,8 @@ def get_location_data_rich(ip_address):
 
 def get_portfolio_data(force_refresh=False):
     """
-    Busca dados do Sistema My O e mapeia as colunas corretamente.
-    Colunas esperadas na planilha: Título, Descrição, Link do site, Logo, Tipo
+    ATUALIZADO: Busca dados do My O e corrige links de imagem do Drive.
+    Usa o domínio 'lh3.googleusercontent.com' que permite exibição em sites.
     """
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
     agora = datetime.now()
@@ -76,7 +76,6 @@ def get_portfolio_data(force_refresh=False):
     try:
         print("🔌 Conectando ao My O System para buscar Portfolio...")
 
-        # 1. Conecta na Mestra
         conn_ws = get_connections_sheet()
         if not conn_ws:
             print("❌ Erro: Não foi possível conectar à Mestra.")
@@ -85,45 +84,55 @@ def get_portfolio_data(force_refresh=False):
         records = conn_ws.get_all_records()
         portfolio_tab_id = None
 
-        # 2. Procura tabela de Portfolio
         for row in records:
-            if 'portfolio' in str(row['Sheet_Name']).lower():
+            s_name = str(row['Sheet_Name']).lower()
+            s_id = str(row['Sheet_ID']).lower()
+
+            if 'portfolio' in s_name or 'portfólio' in s_name or 'portfolio' in s_id or 'portfólio' in s_id:
                 portfolio_tab_id = row['Sheet_ID']
                 print(f"✅ Tabela encontrada: {row['Sheet_Name']} (ID: {portfolio_tab_id})")
                 break
 
         if not portfolio_tab_id:
-            print("⚠️ Aviso: Nenhuma tabela com nome 'Portfolio' encontrada no My O.")
+            print("⚠️ Aviso: Tabela Portfolio não encontrada.")
             return PORTFOLIO_CACHE or []
 
-        # 3. Pega os dados crus
-        raw_data = get_sheet_data(portfolio_tab_id)
+        projects = get_sheet_data(portfolio_tab_id)
 
-        # 4. Mapeia para o formato do site
-        projects = []
-        for row in raw_data:
-            # Só processa se tiver Título preenchido
-            if not row.get('Título'):
-                continue
+        final_projects = []
+        for row in projects:
+            if not row.get('Título'): continue
 
-            # AQUI ESTÁ O MAPEAMENTO QUE VOCÊ PEDIU:
-            project = {
+            # --- CORREÇÃO DEFINITIVA DE IMAGEM ---
+            logo_url = row.get('Logo', '').strip()
+
+            # Se for um link do Google Drive, extraímos o ID e montamos o link direto
+            if 'drive.google.com' in logo_url and 'id=' in logo_url:
+                try:
+                    # Pega o ID que está entre 'id=' e o próximo '&' (se houver)
+                    file_id = logo_url.split('id=')[1].split('&')[0]
+                    # Link mágico que funciona em tags <img>
+                    logo_url = f"https://lh3.googleusercontent.com/d/{file_id}"
+                except:
+                    pass  # Se der erro, mantém o original
+
+            item = {
                 'Título': row.get('Título', '').strip(),
                 'Descrição': row.get('Descrição', '').strip(),
-                'Link': row.get('Link do site', '').strip(),  # Traduz "Link do site" para "Link"
-                'Logo': row.get('Logo', '').strip(),
+                'Link': row.get('Link do site', '').strip(),
+                'Logo': logo_url,
                 'Tipo': row.get('Tipo', '').strip()
             }
-            projects.append(project)
+            final_projects.append(item)
 
-        PORTFOLIO_CACHE = projects
+        PORTFOLIO_CACHE = final_projects
         ULTIMA_ATUALIZACAO_PORTFOLIO = agora
-        print(f"🚀 Portfólio atualizado! {len(projects)} projetos carregados.")
+        print(f"🚀 Portfólio atualizado! {len(final_projects)} projetos carregados.")
 
-        return projects
+        return final_projects
 
     except Exception as e:
-        print(f"❌ Erro crítico ao buscar portfólio no My O: {e}")
+        print(f"❌ Erro crítico ao buscar portfólio: {e}")
         return PORTFOLIO_CACHE if PORTFOLIO_CACHE else []
 
 
