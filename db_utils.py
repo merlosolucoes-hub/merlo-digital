@@ -3,7 +3,6 @@ import json
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-
 def get_db_connection():
     """Conecta ao banco de dados Neon"""
     try:
@@ -13,19 +12,12 @@ def get_db_connection():
         print(f"❌ Erro ao conectar no Banco: {e}")
         return None
 
-
 def get_table_id_by_name(keyword):
-    """
-    Procura na tabela 'user_tables' se existe alguma tabela
-    que tenha o nome (display_name) parecido com a keyword (ex: 'Portfolio').
-    Retorna o ID da tabela (ex: DB_Portfolio_1234).
-    """
+    """Procura ID da tabela pelo nome"""
     conn = get_db_connection()
     if not conn: return None
-
     try:
         cur = conn.cursor()
-        # Busca insensível a maiúsculas/minúsculas
         query = "SELECT id FROM user_tables WHERE LOWER(display_name) LIKE LOWER(%s) LIMIT 1"
         cur.execute(query, (f"%{keyword}%",))
         result = cur.fetchone()
@@ -36,25 +28,49 @@ def get_table_id_by_name(keyword):
     finally:
         if conn: conn.close()
 
-
 def get_sheet_data(tab_id):
-    """
-    Busca os dados (JSON) dentro da tabela 'table_records'.
-    Retorna uma lista de dicionários, igual o Google Sheets fazia.
-    """
+    """Busca os dados JSON da tabela"""
     conn = get_db_connection()
     if not conn: return []
-
     try:
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        # Pega o campo 'data' (que é o JSON com as colunas)
         cur.execute("SELECT data FROM table_records WHERE table_id = %s ORDER BY id ASC", (tab_id,))
         rows = cur.fetchall()
-
-        # Extrai apenas o dicionário de dados de cada linha
         return [r['data'] for r in rows]
     except Exception as e:
         print(f"Erro ao ler dados da tabela {tab_id}: {e}")
         return []
+    finally:
+        if conn: conn.close()
+
+# --- NOVA FUNÇÃO DE TRACKING ---
+def insert_tracking_event(data):
+    """
+    Salva um evento de clique na tabela tracking_events.
+    """
+    conn = get_db_connection()
+    if not conn: return
+
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO tracking_events 
+            (site_source, uid, botao, pagina_origem, url_destino, ip_address, localizacao, provedor, dispositivo)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            data['site_source'],
+            data['uid'],
+            data['botao'],
+            data['pagina_origem'],
+            data['url_destino'],
+            data['ip_address'],
+            data['localizacao'],
+            data['provedor'],
+            data['dispositivo']
+        ))
+        conn.commit()
+        print(f"💾 Tracking salvo no BD: {data['botao']}")
+    except Exception as e:
+        print(f"❌ Erro ao salvar tracking no BD: {e}")
     finally:
         if conn: conn.close()

@@ -1,17 +1,15 @@
 import os
-import csv
 import requests
 import resend
 import threading
 import uuid
-from io import StringIO
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
 from user_agents import parse
 
-# --- ALTERAÇÃO: Agora usamos o banco de dados ---
-from db_utils import get_table_id_by_name, get_sheet_data
+# --- ALTERAÇÃO: Importando funções do DB ---
+from db_utils import get_table_id_by_name, get_sheet_data, insert_tracking_event
 
 load_dotenv()
 
@@ -26,6 +24,9 @@ ULTIMA_ATUALIZACAO_PORTFOLIO = None
 CACHE_TIMEOUT_HORAS = 1
 MEUS_IPS_IGNORADOS = ['177.5.139.35']
 HOST_URL = "https://merlodigital.com"
+
+# Define quem é o dono desse tracking (para separar no banco depois)
+SITE_SOURCE_NAME = "Merlô"
 
 
 def get_location_data_rich(ip_address):
@@ -56,13 +57,11 @@ def get_location_data_rich(ip_address):
 
 def get_portfolio_data(force_refresh=False):
     """
-    ATUALIZADO: Busca dados direto do Banco Neon (PostgreSQL).
-    Muito mais rápido que o Google Sheets.
+    Busca dados direto do Banco Neon (PostgreSQL).
     """
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
     agora = datetime.now()
 
-    # Cache de memória para evitar queries desnecessárias a cada segundo
     if not force_refresh and PORTFOLIO_CACHE and ULTIMA_ATUALIZACAO_PORTFOLIO:
         tempo_passado = agora - ULTIMA_ATUALIZACAO_PORTFOLIO
         if tempo_passado < timedelta(hours=CACHE_TIMEOUT_HORAS):
@@ -70,33 +69,23 @@ def get_portfolio_data(force_refresh=False):
 
     try:
         print("🔌 Conectando ao Neon DB para buscar Portfolio...")
-
-        # 1. Descobre o ID da tabela 'Portfolio'
         portfolio_tab_id = get_table_id_by_name('Portfolio')
 
         if not portfolio_tab_id:
-            # Tenta variações caso o nome seja diferente
             portfolio_tab_id = get_table_id_by_name('Portfólio')
 
         if not portfolio_tab_id:
             print("⚠️ Aviso: Tabela Portfolio não encontrada no Banco de Dados.")
             return PORTFOLIO_CACHE or []
 
-        print(f"✅ Tabela encontrada no DB: {portfolio_tab_id}")
-
-        # 2. Pega os dados brutos (JSON)
         projects = get_sheet_data(portfolio_tab_id)
 
         final_projects = []
         for row in projects:
-            # Garante que chaves existam mesmo se o JSON vier incompleto
             titulo = row.get('Título', '')
             if not titulo: continue
 
-            # --- CORREÇÃO DE IMAGEM ---
-            # Mantemos essa lógica pois os links no banco ainda podem ser do Drive
             logo_url = row.get('Logo', '').strip()
-
             if 'drive.google.com' in logo_url and 'id=' in logo_url:
                 try:
                     file_id = logo_url.split('id=')[1].split('&')[0]
@@ -134,7 +123,11 @@ def processar_envio_background(lista_cliques, motivo):
 
     itens_html = ""
     for item in lista_cliques:
-        geo_data = get_location_data_rich(item['ip'])
+        # A lista já vem com geolocalização processada do 'save_click_async'
+        # ou se veio do buffer antigo, garantimos chaves
+        loc = item.get('localizacao', 'Processando...')
+        rede = item.get('provedor', 'Processando...')
+
         cor_titulo = "#16305D"
         icone_status = "🖱️"
         bg_card = "#f8f9fa"
@@ -154,10 +147,10 @@ def processar_envio_background(lista_cliques, motivo):
             </div>
             <div style="font-size: 12px; color: #555; line-height: 1.6; margin-top: 8px;">
                 🕒 <strong>Hora:</strong> {item['hora_fmt']} <br>
-                🌍 <strong>Local:</strong> {geo_data['local']} <br>
-                🏢 <strong>Rede/Empresa:</strong> {geo_data['rede']} <br>
+                🌍 <strong>Local:</strong> {loc} <br>
+                🏢 <strong>Rede:</strong> {rede} <br>
                 🔧 <strong>Device:</strong> {item['device_str']} <br>
-                🔗 <a href="{HOST_URL}{item['pagina']}" style="color: #666;">{item['pagina']}</a> → {item['destino']}
+                🔗 <a href="{HOST_URL}{item['pagina_origem']}" style="color: #666;">{item['pagina_origem']}</a> → {item['url_destino']}
             </div>
         </li>
         """
@@ -185,6 +178,38 @@ def processar_envio_background(lista_cliques, motivo):
     except Exception as e:
         print(f"❌ Erro ao enviar e-mail: {e}")
 
+
+def save_click_async(clique_data):
+    """
+    Roda em thread separada para não travar o usuário:
+    1. Busca GeoIP (lento)
+    2. Salva no Banco de Dados (Postgres)
+    3. Adiciona ao buffer de e-mail
+    """
+    global BUFFER_CLIQUES
+
+    # 1. Enriquecer com GeoIP
+    geo_data = get_location_data_rich(clique_data['ip_address'])
+
+    clique_data['localizacao'] = geo_data['local']
+    clique_data['provedor'] = geo_data['rede']
+
+    # 2. Salvar no Banco de Dados (Para o My Ô)
+    # Aqui passamos a variável de ambiente ou constante do site
+    clique_data['site_source'] = SITE_SOURCE_NAME
+    insert_tracking_event(clique_data)
+
+    # 3. Adicionar ao Buffer de E-mail (Mantém o relatório antigo funcionando)
+    BUFFER_CLIQUES.append(clique_data)
+
+    # 4. Verifica se deve disparar e-mail
+    if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
+        lote_atual = list(BUFFER_CLIQUES)
+        BUFFER_CLIQUES.clear()
+        processar_envio_background(lote_atual, "Buffer Cheio")
+
+
+# --- ROTAS DE VIEW ---
 
 @app.route('/')
 def index():
@@ -288,10 +313,9 @@ def contato():
     )
 
 
+# --- API TRACKING ATUALIZADA ---
 @app.route('/api/track-click', methods=['POST'])
 def track_click():
-    global BUFFER_CLIQUES
-
     if request.headers.getlist("X-Forwarded-For"):
         user_ip = request.headers.getlist("X-Forwarded-For")[0]
     else:
@@ -316,34 +340,26 @@ def track_click():
     navegador = f"{user_agent.browser.family}"
     icone = "📱" if user_agent.is_mobile else "💻"
 
-    data = request.get_json()
+    data_req = request.get_json()
     hora_atual = datetime.utcnow() - timedelta(hours=3)
 
     novo_clique = {
         "uid": usuario_id,
         "is_new_user": is_new_user,
-        "botao": data.get('botao', 'Clique Genérico'),
-        "pagina": data.get('pagina_origem', '/'),
-        "destino": data.get('url_destino', '#'),
+        "botao": data_req.get('botao', 'Clique Genérico'),
+        "pagina_origem": data_req.get('pagina_origem', '/'),
+        "url_destino": data_req.get('url_destino', '#'),
         "hora_fmt": hora_atual.strftime("%H:%M:%S"),
-        "ip": user_ip,
-        "device_str": f"{icone} {navegador} no {dispositivo}"
+        "ip_address": user_ip,
+        "device_str": f"{icone} {navegador} no {dispositivo}",
+        "dispositivo": f"{icone} {navegador}"  # Campo simplificado para o DB
     }
 
-    BUFFER_CLIQUES.append(novo_clique)
+    # --- MUDANÇA: Inicia Thread que Salva no DB e depois manda Email ---
+    t = threading.Thread(target=save_click_async, args=(novo_clique,))
+    t.start()
 
-    response_json = {'status': 'acumulando', 'qtd': len(BUFFER_CLIQUES)}
-
-    if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
-        lote_atual = list(BUFFER_CLIQUES)
-        BUFFER_CLIQUES.clear()
-
-        t = threading.Thread(target=processar_envio_background, args=(lote_atual, "Buffer Cheio"))
-        t.start()
-
-        response_json = {'status': 'enviando_background'}
-
-    resp = make_response(jsonify(response_json))
+    resp = make_response(jsonify({'status': 'processando_background'}))
     if is_new_user:
         resp.set_cookie('merlo_uid', usuario_id, max_age=31536000, httponly=True, samesite='Lax')
 
