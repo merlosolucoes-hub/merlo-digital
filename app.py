@@ -2,16 +2,16 @@ import os
 import csv
 import requests
 import resend
-import threading  # NOVO: Para não travar o site
-import uuid  # NOVO: Para gerar ID do visitante
+import threading
+import uuid
 from io import StringIO
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
 from user_agents import parse
 
-# --- ALTERAÇÃO AQUI: Importando funções do My O System ---
-from google_utils import get_connections_sheet, get_sheet_data
+# --- ALTERAÇÃO: Agora usamos o banco de dados ---
+from db_utils import get_table_id_by_name, get_sheet_data
 
 load_dotenv()
 
@@ -30,21 +30,15 @@ HOST_URL = "https://merlodigital.com"
 
 def get_location_data_rich(ip_address):
     """
-    Busca dados enriquecidos. Não traz rua exata (impossível via IP),
-    mas traz o Provedor (ISP) e a Empresa (Org), que valem ouro no B2B.
+    Busca dados enriquecidos de GeoIP.
     """
     try:
-        # Adicionamos fields para pedir ISP e Org
         url = f'http://ip-api.com/json/{ip_address}?fields=status,message,countryCode,regionName,city,isp,org,zip'
-        response = requests.get(url, timeout=3)  # Timeout maior pois roda em thread
+        response = requests.get(url, timeout=3)
         data = response.json()
 
         if data['status'] == 'success':
-            # Formata: "Blumenau/SC (BR)"
             local_base = f"{data['city']}/{data['regionName']} ({data['countryCode']})"
-
-            # Formata: "Unifique Telecom" ou "Banco do Brasil S.A."
-            # Se ISP e Org forem iguais, mostra só um.
             detalhe_rede = data['org'] if data['org'] else data['isp']
             if data['isp'] and data['isp'] != data['org']:
                 detalhe_rede = f"{data['isp']} ({data['org']})"
@@ -52,7 +46,7 @@ def get_location_data_rich(ip_address):
             return {
                 "local": local_base,
                 "rede": detalhe_rede,
-                "zip": data['zip']  # CEP Genérico da região
+                "zip": data['zip']
             }
         return {"local": "Local Desconhecido", "rede": "N/A", "zip": ""}
     except Exception as e:
@@ -62,62 +56,56 @@ def get_location_data_rich(ip_address):
 
 def get_portfolio_data(force_refresh=False):
     """
-    ATUALIZADO: Busca dados do My O e corrige links de imagem do Drive.
-    Usa o domínio 'lh3.googleusercontent.com' que permite exibição em sites.
+    ATUALIZADO: Busca dados direto do Banco Neon (PostgreSQL).
+    Muito mais rápido que o Google Sheets.
     """
     global PORTFOLIO_CACHE, ULTIMA_ATUALIZACAO_PORTFOLIO
     agora = datetime.now()
 
+    # Cache de memória para evitar queries desnecessárias a cada segundo
     if not force_refresh and PORTFOLIO_CACHE and ULTIMA_ATUALIZACAO_PORTFOLIO:
         tempo_passado = agora - ULTIMA_ATUALIZACAO_PORTFOLIO
         if tempo_passado < timedelta(hours=CACHE_TIMEOUT_HORAS):
             return PORTFOLIO_CACHE
 
     try:
-        print("🔌 Conectando ao My O System para buscar Portfolio...")
+        print("🔌 Conectando ao Neon DB para buscar Portfolio...")
 
-        conn_ws = get_connections_sheet()
-        if not conn_ws:
-            print("❌ Erro: Não foi possível conectar à Mestra.")
-            return PORTFOLIO_CACHE or []
-
-        records = conn_ws.get_all_records()
-        portfolio_tab_id = None
-
-        for row in records:
-            s_name = str(row['Sheet_Name']).lower()
-            s_id = str(row['Sheet_ID']).lower()
-
-            if 'portfolio' in s_name or 'portfólio' in s_name or 'portfolio' in s_id or 'portfólio' in s_id:
-                portfolio_tab_id = row['Sheet_ID']
-                print(f"✅ Tabela encontrada: {row['Sheet_Name']} (ID: {portfolio_tab_id})")
-                break
+        # 1. Descobre o ID da tabela 'Portfolio'
+        portfolio_tab_id = get_table_id_by_name('Portfolio')
 
         if not portfolio_tab_id:
-            print("⚠️ Aviso: Tabela Portfolio não encontrada.")
+            # Tenta variações caso o nome seja diferente
+            portfolio_tab_id = get_table_id_by_name('Portfólio')
+
+        if not portfolio_tab_id:
+            print("⚠️ Aviso: Tabela Portfolio não encontrada no Banco de Dados.")
             return PORTFOLIO_CACHE or []
 
+        print(f"✅ Tabela encontrada no DB: {portfolio_tab_id}")
+
+        # 2. Pega os dados brutos (JSON)
         projects = get_sheet_data(portfolio_tab_id)
 
         final_projects = []
         for row in projects:
-            if not row.get('Título'): continue
+            # Garante que chaves existam mesmo se o JSON vier incompleto
+            titulo = row.get('Título', '')
+            if not titulo: continue
 
-            # --- CORREÇÃO DEFINITIVA DE IMAGEM ---
+            # --- CORREÇÃO DE IMAGEM ---
+            # Mantemos essa lógica pois os links no banco ainda podem ser do Drive
             logo_url = row.get('Logo', '').strip()
 
-            # Se for um link do Google Drive, extraímos o ID e montamos o link direto
             if 'drive.google.com' in logo_url and 'id=' in logo_url:
                 try:
-                    # Pega o ID que está entre 'id=' e o próximo '&' (se houver)
                     file_id = logo_url.split('id=')[1].split('&')[0]
-                    # Link mágico que funciona em tags <img>
                     logo_url = f"https://lh3.googleusercontent.com/d/{file_id}"
                 except:
-                    pass  # Se der erro, mantém o original
+                    pass
 
             item = {
-                'Título': row.get('Título', '').strip(),
+                'Título': titulo.strip(),
                 'Descrição': row.get('Descrição', '').strip(),
                 'Link': row.get('Link do site', '').strip(),
                 'Logo': logo_url,
@@ -127,20 +115,18 @@ def get_portfolio_data(force_refresh=False):
 
         PORTFOLIO_CACHE = final_projects
         ULTIMA_ATUALIZACAO_PORTFOLIO = agora
-        print(f"🚀 Portfólio atualizado! {len(final_projects)} projetos carregados.")
+        print(f"🚀 Portfólio atualizado via DB! {len(final_projects)} projetos.")
 
         return final_projects
 
     except Exception as e:
-        print(f"❌ Erro crítico ao buscar portfólio: {e}")
+        print(f"❌ Erro crítico ao buscar portfólio no DB: {e}")
         return PORTFOLIO_CACHE if PORTFOLIO_CACHE else []
 
 
-# --- FUNÇÃO DE ENVIO ASSÍNCRONO (RODA EM THREAD) ---
 def processar_envio_background(lista_cliques, motivo):
     """
-    Roda em Thread separada. O usuário navega rápido enquanto o servidor
-    trabalha pesado aqui (GeoIP + E-mail) sem travar ninguém.
+    Roda em Thread separada para envio de e-mails.
     """
     email_destino = os.getenv('EMAIL_DESTINO')
     if not lista_cliques or not email_destino:
@@ -148,18 +134,15 @@ def processar_envio_background(lista_cliques, motivo):
 
     itens_html = ""
     for item in lista_cliques:
-        # GeoIP detalhado roda aqui, sem pressa
         geo_data = get_location_data_rich(item['ip'])
-
         cor_titulo = "#16305D"
         icone_status = "🖱️"
         bg_card = "#f8f9fa"
 
-        # Destaque visual para conversões
         if "WhatsApp" in item['botao'] or "Contato" in item['botao']:
             cor_titulo = "#25D366"
             icone_status = "💬"
-            bg_card = "#e8f5e9"  # Fundo verdinho leve
+            bg_card = "#e8f5e9"
 
         tag_visitante = "👤 Novo" if item.get('is_new_user') else "🔄 Retorno"
 
@@ -174,7 +157,7 @@ def processar_envio_background(lista_cliques, motivo):
                 🌍 <strong>Local:</strong> {geo_data['local']} <br>
                 🏢 <strong>Rede/Empresa:</strong> {geo_data['rede']} <br>
                 🔧 <strong>Device:</strong> {item['device_str']} <br>
-                🔗 <a href="{HOST_URL}{item['pagina']}" style="color: #666;">{item['pagina']}</a> &rarr; {item['destino']}
+                🔗 <a href="{HOST_URL}{item['pagina']}" style="color: #666;">{item['pagina']}</a> → {item['destino']}
             </div>
         </li>
         """
@@ -253,30 +236,21 @@ def portfolio():
 @app.route('/contato', methods=['GET', 'POST'])
 def contato():
     if request.method == 'POST':
-        # --- 1. PROTEÇÃO HONEYPOT (ARMADILHA) ---
-        # Se o robô preencher este campo escondido, bloqueamos silenciosamente
         spam_trap = request.form.get('bairro_confirma')
         if spam_trap:
-            print(f"BOT BLOQUEADO! Tentou preencher o honeypot.")
-            # Fingimos que deu certo para o robô ir embora feliz e não tentar de novo
             flash('Solicitação enviada com sucesso!', 'success')
             return redirect(url_for('contato'))
 
-        # --- 2. CAPTURA DE DADOS ---
         nome = request.form.get('nome')
         email_cliente = request.form.get('email')
         empresa = request.form.get('empresa')
         mensagem_cliente = request.form.get('mensagem')
-        # Telefone não é obrigatório no form, mas se vier, pegamos
         telefone = request.form.get('telefone')
 
-        # --- 3. VALIDAÇÃO DE SEGURANÇA (O que você pediu) ---
         if not email_cliente or '@' not in email_cliente or '.' not in email_cliente:
-            print(f"SPAM RECUSADO: E-mail inválido ({email_cliente})")
             flash('O e-mail informado é inválido. Por favor, verifique.', 'danger')
             return redirect(url_for('contato'))
 
-        # Se passou das barreiras acima, tenta enviar
         email_destino = os.getenv('EMAIL_DESTINO')
 
         try:
@@ -318,7 +292,6 @@ def contato():
 def track_click():
     global BUFFER_CLIQUES
 
-    # 1. Filtros de Segurança
     if request.headers.getlist("X-Forwarded-For"):
         user_ip = request.headers.getlist("X-Forwarded-For")[0]
     else:
@@ -332,7 +305,6 @@ def track_click():
     if user_ip in MEUS_IPS_IGNORADOS:
         return jsonify({'status': 'ignorado', 'motivo': 'admin'}), 200
 
-    # 2. Identificação Inteligente (COOKIES)
     usuario_id = request.cookies.get('merlo_uid')
     is_new_user = False
 
@@ -340,15 +312,11 @@ def track_click():
         usuario_id = str(uuid.uuid4())
         is_new_user = True
 
-    # 3. Coleta de Dados
     dispositivo = f"{user_agent.os.family} {user_agent.os.version_string}"
     navegador = f"{user_agent.browser.family}"
     icone = "📱" if user_agent.is_mobile else "💻"
 
     data = request.get_json()
-
-    # --- CORREÇÃO DE HORÁRIO (BRASIL UTC-3) ---
-    # Pegamos o horário UTC do servidor e subtraímos 3 horas
     hora_atual = datetime.utcnow() - timedelta(hours=3)
 
     novo_clique = {
@@ -357,14 +325,13 @@ def track_click():
         "botao": data.get('botao', 'Clique Genérico'),
         "pagina": data.get('pagina_origem', '/'),
         "destino": data.get('url_destino', '#'),
-        "hora_fmt": hora_atual.strftime("%H:%M:%S"),  # Agora vai sair certo
+        "hora_fmt": hora_atual.strftime("%H:%M:%S"),
         "ip": user_ip,
         "device_str": f"{icone} {navegador} no {dispositivo}"
     }
 
     BUFFER_CLIQUES.append(novo_clique)
 
-    # 4. Resposta Ultra-Rápida
     response_json = {'status': 'acumulando', 'qtd': len(BUFFER_CLIQUES)}
 
     if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
@@ -386,20 +353,17 @@ def track_click():
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
     global BUFFER_CLIQUES
-
-    # Horário Brasil para o log do terminal
     hora_br = datetime.utcnow() - timedelta(hours=3)
     print(f"⏰ Cron Job acionado em {hora_br.strftime('%H:%M:%S')}")
 
     if len(BUFFER_CLIQUES) > 0:
         lote_atual = list(BUFFER_CLIQUES)
         BUFFER_CLIQUES.clear()
-
         t = threading.Thread(target=processar_envio_background, args=(lote_atual, "Cron Job (Rotina)"))
         t.start()
-
         return jsonify({'status': 'ok', 'acao': 'thread_iniciada'}), 200
     else:
+        # Atualiza cache do portfolio via DB
         projetos = get_portfolio_data(force_refresh=True)
         return jsonify({'status': 'ok', 'msg': 'Sem cliques. Cache renovado.'}), 200
 
@@ -407,10 +371,8 @@ def cron_job():
 @app.route('/sitemap.xml')
 def sitemap():
     pages = ['/', '/servicos', '/servicos/website', '/servicos/sistemas', '/portfolio', '/contato']
-
     sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">"""
-
     for page in pages:
         sitemap_xml += f"""
         <url>
@@ -418,9 +380,7 @@ def sitemap():
             <changefreq>monthly</changefreq>
             <priority>{'1.0' if page == '/' else '0.8'}</priority>
         </url>"""
-
     sitemap_xml += "</urlset>"
-
     response = make_response(sitemap_xml)
     response.headers["Content-Type"] = "application/xml"
     return response

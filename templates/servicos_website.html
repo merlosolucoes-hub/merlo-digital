@@ -3,26 +3,20 @@
 {% block content %}
 
 <div class="website-header position-relative overflow-hidden">
-    <div class="container position-relative z-2 h-100 d-flex flex-column justify-content-center">
-        <div class="row align-items-center">
-            <div class="col-lg-7">
+    <div class="container position-relative z-2 h-100 d-flex flex-column justify-content-center text-center">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-10">
                 <span class="badge bg-info text-dark mb-3 px-3 py-2 rounded-pill fw-bold fade-in-up">DESENVOLVIMENTO WEB</span>
-                <h1 class="display-4 fw-bold text-white mb-4 fade-in-up delay-1">Seu melhor vendedor <br><span class="text-gradient">trabalha 24h por dia.</span></h1>
-                <p class="lead text-muted fade-in-up delay-2 mb-4" style="max-width: 600px;">
+                <h1 class="display-3 fw-bold text-white mb-4 fade-in-up delay-1">Seu melhor vendedor <br><span class="text-gradient">trabalha 24h por dia.</span></h1>
+                <p class="lead text-muted fade-in-up delay-2 mb-5 mx-auto" style="max-width: 800px;">
                     Não criamos apenas "sites bonitos". Criamos máquinas de vendas otimizadas para o Google, rápidas no celular e integradas ao seu WhatsApp.
                 </p>
-                <div class="d-flex gap-3 fade-in-up delay-3">
-                    <a href="#pricing" class="btn btn-merlo px-4 py-2">Ver Planos</a>
-                    <a href="#diferenciais" class="btn btn-outline-light px-4 py-2">Por que a Merlô?</a>
+                <div class="d-flex gap-3 justify-content-center fade-in-up delay-3">
+                    <a href="#pricing" class="btn btn-merlo px-5 py-3 fs-5">Ver Planos</a>
+                    <a href="#diferenciais" class="btn btn-outline-light px-5 py-3 fs-5">Por que a Merlô?</a>
                 </div>
             </div>
-            <div class="col-lg-5 d-none d-lg-block fade-in-up delay-2">
-                <div class="mockup-container position-relative">
-                    <div class="mockup-circle bg-info opacity-10 blur-xl position-absolute"></div>
-                    <img src="https://images.unsplash.com/photo-1481487484168-9b930d552086?q=80&w=1000&auto=format&fit=crop" class="img-fluid rounded-4 shadow-lg border border-secondary position-relative z-2 rotate-hover" alt="Site Merlô">
-                </div>
             </div>
-        </div>
     </div>
     <div class="contact-glow" style="top: -50%; right: -20%;"></div>
 </div>
@@ -151,15 +145,15 @@
             <div class="pricing-card plus">
                 <div class="badge highlight-badge">Destaque Merlô</div>
                 <h3>Standard Plus</h3>
-                <p class="desc">Site Dinâmico integrado ao Google Sheets.</p>
+                <p class="desc">Site Dinâmico integrado ao Portal My Ô.</p>
                 <div class="price">R$ 1.800<span>/único</span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> <strong>Gestão via Planilha Google</strong></li>
+                    <li><i class="fas fa-check"></i> <strong>Gestão via Portal My Ô</strong></li>
                     <li><i class="fas fa-check"></i> Atualize preços/fotos pelo celular</li>
                     <li><i class="fas fa-check"></i> Ideal para Imobiliárias/Cardápios</li>
-                    <li><i class="fas fa-check"></i> Sem custo de Banco de Dados</li>
+                    <li><i class="fas fa-check"></i> Autonomia Total</li>
                 </ul>
-                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+quero+entender+o+plano+Standard+Plus+(Google+Sheets)." class="btn-pricing" target="_blank">
+                <a href="https://wa.me/5547992539750?text=Ol%C3%A1%2C+quero+entender+o+plano+Standard+Plus+(My+O)." class="btn-pricing" target="_blank">
                    <i class="bi bi-whatsapp"></i> Contratar Plus
                 </a>
             </div>
@@ -170,7 +164,7 @@
                 <p class="desc">Sistema Web Completo e Personalizado.</p>
                 <div class="price price-text">Sob Consulta</div>
                 <ul>
-                    <li><i class="fas fa-check"></i> Painel Administrativo Próprio</li>
+                    <li><i class="fas fa-check"></i> Painel Administrativo Personalizado</li>
                     <li><i class="fas fa-check"></i> Banco de Dados Dedicado (SQL)</li>
                     <li><i class="fas fa-check"></i> Área de Login / Usuários</li>
                     <li><i class="fas fa-check"></i> Regras de Negócio Complexas</li>
@@ -182,36 +176,82 @@
 
         </div>
 
-        <div class="row justify-content-center mb-5">
-            <div class="col-lg-10">
-                <div class="optionals-box">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h4 class="mb-3"><i class="bi bi-rocket-takeoff-fill text-info"></i> Plano de Performance & Manutenção</h4>
-                            <p class="text-muted mb-3">
-                                Garanta que seu site continue gerando resultados todos os meses com nossa estrutura premium.
+<div class="row justify-content-center mb-5">
+            <div class="col-lg-12">
+                <div class="p-4 border border-info border-opacity-25 rounded-4 bg-dark position-relative overflow-hidden">
+
+                    <div class="position-absolute top-0 end-0 bg-info blur-xl w-50 h-100" style="opacity: 0.08; pointer-events: none;"></div>
+
+                    <div class="row align-items-center position-relative z-1">
+                        <div class="col-lg-8">
+                            <h4 class="mb-3 text-white"><i class="bi bi-rocket-takeoff-fill text-info me-2"></i> Plano de Performance & Manutenção</h4>
+                            <p class="text-white-50 mb-4 small" style="max-width: 90%;">
+                                Como seu site utiliza engenharia de software de alta performance, ele exige um servidor especializado.
+                                Nosso plano cobre toda essa infraestrutura, segurança e a inteligência de dados que seu negócio precisa.
                             </p>
-                            <div class="row g-2">
+
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <ul class="list-unstyled text-muted small mb-0">
-                                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Merlô Tracking Incluso:</strong> Relatórios de cliques.</li>
-                                        <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>SEO Monitorado:</strong> Melhorias contínuas para o Google.</li>
-                                    </ul>
+                                    <div class="d-flex mb-3">
+                                        <div class="me-3">
+                                            <i class="bi bi-columns-gap text-info fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="text-white d-block">Acesso ao Portal My Ô</strong>
+                                            <span class="text-muted small d-block" style="line-height: 1.4;">
+                                                Autonomia para gerenciar a galeria de fotos e textos sozinho, via painel administrativo.
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="bi bi-graph-up-arrow text-info fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="text-white d-block">Merlô Tracking</strong>
+                                            <span class="text-muted small d-block" style="line-height: 1.4;">
+                                                Monitoramento real de cliques e geolocalização. Relatórios via e-mail (em breve integrado ao painel).
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <ul class="list-unstyled text-muted small mb-0">
-                                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Hospedagem de Alta Velocidade.</li>
-                                        <li><i class="bi bi-check-circle-fill text-success me-2"></i> Certificado de Segurança (SSL).</li>
-                                    </ul>
+                                    <div class="d-flex mb-3">
+                                        <div class="me-3">
+                                            <i class="bi bi-code-square text-info fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="text-white d-block">Pixels & SEO Técnico</strong>
+                                            <span class="text-muted small d-block" style="line-height: 1.4;">
+                                                Configuração de rastreamento (Ads) e otimização avançada para o Google (SEO) para seu site ser encontrado.
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="bi bi-shield-check text-info fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="text-white d-block">Hospedagem Premium & SSL</strong>
+                                            <span class="text-muted small d-block" style="line-height: 1.4;">
+                                                Servidor especializado, backups e cadeado de segurança inclusos.
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 text-center mt-4 mt-md-0 border-start border-secondary ps-md-4">
-                            <span class="d-block text-muted small text-uppercase fw-bold">Assinatura Mensal</span>
-                            <span class="d-block text-white fs-2 fw-black my-1">R$ 70<small class="fs-6 text-muted">/mês</small></span>
-                            <small class="text-info d-block">*Opcional (Sem fidelidade)</small>
-                            <a href="https://wa.me/5547992539750?text=Tenho+interesse+na+manuten%C3%A7%C3%A3o+com+Merl%C3%B4+Tracking." class="btn btn-sm btn-outline-light mt-3 rounded-pill">
-                                Quero este plano
+
+                        <div class="col-lg-4 text-center border-start border-secondary border-opacity-25 mt-4 mt-lg-0 ps-lg-4">
+                            <span class="d-block text-muted small text-uppercase fw-bold mb-2">Investimento Mensal</span>
+                            <div class="d-flex justify-content-center align-items-baseline mb-2">
+                                <span class="fs-5 text-muted me-1">R$</span>
+                                <span class="display-4 fw-bold text-white">70</span>
+                                <span class="fs-6 text-muted">/mês</span>
+                            </div>
+                            <small class="text-info d-block mb-4">*Opcional (Sem fidelidade)</small>
+                            <a href="https://wa.me/5547992539750?text=Tenho+interesse+na+manuten%C3%A7%C3%A3o+com+Merl%C3%B4+Tracking." class="btn btn-info fw-bold rounded-pill w-100 py-2">
+                                Ativar Plano Agora
                             </a>
                         </div>
                     </div>
@@ -244,14 +284,14 @@
                             <td><strong>Atualização de Conteúdo</strong></td>
                             <td>Via Código</td>
                             <td>Via Código</td>
-                            <td><strong>Via Planilha Google</strong></td>
+                            <td><strong>Via Portal My Ô</strong></td>
                             <td>Painel Admin (CMS)</td>
                         </tr>
                         <tr>
                             <td><strong>Banco de Dados</strong></td>
                             <td>Não</td>
                             <td>Não</td>
-                            <td>Google Sheets API</td>
+                            <td><strong>Portal My Ô</strong></td>
                             <td>SQL Dedicado</td>
                         </tr>
                         <tr>
@@ -302,8 +342,8 @@
                 <div class="tab-pane fade" id="content-plus">
                     <ul class="tab-spec-list" style="border-color: var(--accent-highlight);">
                         <li><span class="spec-label">Páginas</span><span class="spec-value">Até 5 Dinâmicas</span></li>
-                        <li><span class="spec-label">Atualização</span><span class="spec-value text-info">Planilha Google</span></li>
-                        <li><span class="spec-label">Banco de Dados</span><span class="spec-value text-success">API Google</span></li>
+                        <li><span class="spec-label">Atualização</span><span class="spec-value text-info">Portal My Ô</span></li>
+                        <li><span class="spec-label">Banco de Dados</span><span class="spec-value text-success">My Ô System</span></li>
                     </ul>
                 </div>
                 <div class="tab-pane fade" id="content-pro">
