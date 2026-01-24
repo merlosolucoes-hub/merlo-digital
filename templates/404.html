@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    /* --- ESTILOS 404 GERAIS --- */
+    .error-hero {
+        min-height: 85vh; /* Altura ajustada para mobile */
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: radial-gradient(circle at center, rgba(15, 34, 66, 0.8) 0%, var(--brand-primary) 100%);
+        padding: 40px 0;
+    }
+
+    /* Texto 404 Responsivo */
+    .error-code-big {
+        font-size: 8rem;
+        font-weight: 900;
+        line-height: 1;
+        background: linear-gradient(180deg, #ffffff, rgba(255,255,255,0.1));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Ajuste para Celular */
+    @media (max-width: 768px) {
+        .error-code-big {
+            font-size: 5rem; /* Diminui para caber na tela */
+        }
+        .error-hero {
+            text-align: center; /* Centraliza tudo no mobile */
+        }
+        .hero-badge {
+            margin: 0 auto 15px auto; /* Centraliza badge */
+        }
+        .btn-group-mobile {
+            flex-direction: column;
+            width: 100%;
+        }
+        .btn-group-mobile .btn {
+            width: 100%;
+        }
+    }
+
+    .error-code-big::after {
+        content: "404";
+        position: absolute;
+        top: 0; left: 3px; width: 100%; height: 100%;
+        background: transparent;
+        color: rgba(79, 172, 254, 0.5);
+        z-index: -1;
+        animation: glitch-skew 2s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-skew {
+        0%, 100% { transform: skew(0deg); }
+        20% { transform: skew(-2deg); }
+        40% { transform: skew(2deg); }
+        60% { transform: skew(-1deg); }
+        80% { transform: skew(1deg); }
+    }
+
+    /* --- TERMINAL (CONSOLE) --- */
+    .terminal-wrapper {
+        background-color: #050b14;
+        border: 1px solid rgba(79, 172, 254, 0.3);
+        border-radius: 10px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        overflow: hidden;
+        margin-top: 30px;
+        position: relative;
+        max-width: 100%; /* Garante que não estoure */
+    }
+
+    .terminal-header {
+        background-color: rgba(79, 172, 254, 0.1);
+        padding: 8px 15px;
+        border-bottom: 1px solid rgba(79, 172, 254, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Courier New', monospace;
+        font-size: 0.75rem;
+        color: var(--accent-highlight);
+    }
+
+    .terminal-body {
+        padding: 20px;
+        font-family: 'Courier New', monospace;
+        color: #00ff41;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Canvas Responsivo */
+    #gameCanvas {
+        background-color: #000;
+        border: 2px solid #004d1a;
+        display: none;
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        max-width: 100%; /* Adapta se a tela for muito pequena */
+        height: auto;
+    }
+
+    .btn-terminal {
+        background: transparent;
+        border: 1px solid #00ff41;
+        color: #00ff41;
+        padding: 8px 20px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        margin-top: 15px;
+    }
+
+    .btn-terminal:hover, .btn-terminal:active {
+        background: #00ff41;
+        color: #000;
+        box-shadow: 0 0 15px #00ff41;
+    }
+
+    .blink-cursor { animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* --- CONTROLES MOBILE (D-PAD) --- */
+    .mobile-controls {
+        display: none; /* Escondido no Desktop */
+        margin-top: 20px;
+        gap: 10px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .d-pad-row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn-dpad {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid #00ff41;
+        color: #00ff41;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none; /* Evita selecionar texto ao clicar rápido */
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-dpad:active {
+        background: #00ff41;
+        color: #000;
+    }
+
+    /* Mostra controles apenas no mobile */
+    @media (max-width: 991px) {
+        .mobile-controls.active {
+            display: flex;
+        }
+        /* Ajuste de margem no terminal para caber os botões */
+        .terminal-body {
+            padding-bottom: 20px;
+        }
+    }
+</style>
+
+<div class="layout-wrapper">
+    <section class="error-hero">
+        <div class="hero-glow" style="opacity: 0.3;"></div>
+
+        <div class="container position-relative z-2">
+            <div class="row justify-content-center align-items-center">
+
+                <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
+                    <div class="hero-badge mb-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i> Erro de Rota
+                    </div>
+
+                    <h1 class="error-code-big mb-2">404</h1>
+                    <h2 class="text-white fw-bold mb-4">Página Não Encontrada</h2>
+
+                    <p class="lead text-muted mb-5">
+                        O algoritmo buscou em todo o nosso banco de dados, mas a URL solicitada não existe.
+                        Isso pode ser um erro de digitação ou uma página antiga.
+                    </p>
+
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start btn-group-mobile">
+                        <a href="{{ url_for('index') }}" class="btn btn-merlo">
+                            <i class="bi bi-arrow-left me-2"></i> Voltar ao Início
+                        </a>
+                        <a href="{{ url_for('contato') }}" class="btn btn-outline-light">
+                            Reportar Problema
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 offset-lg-1">
+                    <div class="terminal-wrapper">
+                        <div class="terminal-header">
+                            <span><i class="bi bi-terminal-fill me-2"></i>MERLO_DIAGNOSTIC.EXE</span>
+                            <div class="d-flex gap-2">
+                                <span style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></span>
+                                <span style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></span>
+                                <span style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></span>
+                            </div>
+                        </div>
+
+                        <div class="terminal-body" id="terminalUI">
+                            <div id="terminalMessage" class="text-start w-100">
+                                <p class="mb-1 text-break">> Connecting... <span class="text-white">OK</span></p>
+                                <p class="mb-1">> Verifying URL... <span style="color: #ff4757;">FAILED</span></p>
+                                <p class="mb-1">> Error 404: Resource missing.</p>
+                                <p class="mb-3">> Waiting user input<span class="blink-cursor">_</span></p>
+
+                                <div class="text-center mt-4 border-top border-secondary pt-3" style="border-color: rgba(0,255,65,0.2) !important;">
+                                    <small class="text-muted d-block mb-2">// SISTEMA EM ESPERA //</small>
+                                    <button onclick="initSnakeGame()" class="btn-terminal">
+                                        <i class="bi bi-play-fill"></i> EXECUTAR SNAKE.PY
+                                    </button>
+                                </div>
+                            </div>
+
+                            <canvas id="gameCanvas" width="300" height="300"></canvas>
+
+                            <div id="mobileControls" class="mobile-controls">
+                                <button class="btn-dpad" onclick="move('up')"><i class="bi bi-arrow-up"></i></button>
+                                <div class="d-pad-row">
+                                    <button class="btn-dpad" onclick="move('left')"><i class="bi bi-arrow-left"></i></button>
+                                    <button class="btn-dpad" onclick="move('down')"><i class="bi bi-arrow-down"></i></button>
+                                    <button class="btn-dpad" onclick="move('right')"><i class="bi bi-arrow-right"></i></button>
+                                </div>
+                            </div>
+
+                            <div id="gameControls" style="display:none;" class="text-center mt-3">
+                                <p class="mb-2 small">Score: <span id="scoreVal" class="text-white fw-bold">0</span></p>
+                                <p class="small text-muted mb-0 d-none d-lg-block">Use as setas do teclado para jogar</p>
+                                <button onclick="resetGame()" class="btn-terminal btn-sm mt-2" style="font-size: 0.7rem;">REINICIAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // --- LÓGICA DO JOGO SNAKE ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const terminalMsg = document.getElementById('terminalMessage');
+    const gameControls = document.getElementById('gameControls');
+    const mobileControls = document.getElementById('mobileControls');
+    const scoreElement = document.getElementById('scoreVal');
+
+    let tileCount = 15; // Grid menor
+    let gridSize = canvas.width / tileCount;
+    let headX = 10, headY = 10;
+    let velocityX = 0, velocityY = 0;
+    let appleX = 5, appleY = 5;
+    let tail = [], tailLength = 2;
+    let score = 0;
+    let gameInterval;
+    let isRunning = false;
+
+    function initSnakeGame() {
+        terminalMsg.style.display = 'none';
+        canvas.style.display = 'block';
+        gameControls.style.display = 'block';
+        mobileControls.classList.add('active'); // Mostra controles no mobile
+
+        if (!isRunning) resetGame();
+    }
+
+    function resetGame() {
+        headX = 10; headY = 10;
+        velocityX = 0; velocityY = 0;
+        tail = []; tailLength = 2;
+        score = 0;
+        scoreElement.innerText = score;
+
+        appleX = Math.floor(Math.random() * tileCount);
+        appleY = Math.floor(Math.random() * tileCount);
+
+        clearInterval(gameInterval);
+        gameInterval = setInterval(drawGame, 1000 / 10);
+        isRunning = true;
+
+        // Previne scroll da tela com setas
+        window.addEventListener("keydown", function(e) {
+            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+    }
+
+    function drawGame() {
+        headX += velocityX;
+        headY += velocityY;
+
+        // Paredes (Loop)
+        if (headX < 0) headX = tileCount - 1;
+        if (headX > tileCount - 1) headX = 0;
+        if (headY < 0) headY = tileCount - 1;
+        if (headY > tileCount - 1) headY = 0;
+
+        // Fundo
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Cobra
+        ctx.fillStyle = '#00ff41';
+        for (let i = 0; i < tail.length; i++) {
+            ctx.fillRect(tail[i].x * gridSize, tail[i].y * gridSize, gridSize - 2, gridSize - 2);
+            if (tail[i].x === headX && tail[i].y === headY && tailLength > 2) {
+                // Game Over
+                ctx.fillStyle = 'red';
+                ctx.fillRect(headX * gridSize, headY * gridSize, gridSize, gridSize);
+                setTimeout(() => { alert("Game Over! Score: " + score); resetGame(); }, 100);
+                return;
+            }
+        }
+
+        tail.push({ x: headX, y: headY });
+        while (tail.length > tailLength) tail.shift();
+
+        // Maçã
+        ctx.fillStyle = '#4facfe';
+        ctx.shadowBlur = 10; ctx.shadowColor = '#4facfe';
+        ctx.fillRect(appleX * gridSize, appleY * gridSize, gridSize - 2, gridSize - 2);
+        ctx.shadowBlur = 0;
+
+        if (appleX === headX && appleY === headY) {
+            tailLength++;
+            score += 10;
+            scoreElement.innerText = score;
+            appleX = Math.floor(Math.random() * tileCount);
+            appleY = Math.floor(Math.random() * tileCount);
+        }
+    }
+
+    // --- CONTROLE DE DIREÇÃO (Teclado + Touch) ---
+    function move(dir) {
+        if (!isRunning) return;
+        switch(dir) {
+            case 'left': if (velocityX !== 1) { velocityX = -1; velocityY = 0; } break;
+            case 'up': if (velocityY !== 1) { velocityX = 0; velocityY = -1; } break;
+            case 'right': if (velocityX !== -1) { velocityX = 1; velocityY = 0; } break;
+            case 'down': if (velocityY !== -1) { velocityX = 0; velocityY = 1; } break;
+        }
+    }
+
+    document.addEventListener('keydown', (event) => {
+        switch (event.keyCode) {
+            case 37: move('left'); break;
+            case 38: move('up'); break;
+            case 39: move('right'); break;
+            case 40: move('down'); break;
+        }
+    });
+</script>
+
+{% endblock %}

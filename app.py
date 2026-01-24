@@ -419,6 +419,11 @@ def termos():
         description="Transparência total. Nossas políticas de privacidade, LGPD e termos de serviço."
     )
 
+# --- ROTA DE ERRO 404 ---
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', title="404 | Página Não Encontrada"), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
