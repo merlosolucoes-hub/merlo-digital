@@ -43,7 +43,7 @@ def get_sheet_data(tab_id):
     finally:
         if conn: conn.close()
 
-# --- NOVA FUNÇÃO DE TRACKING ---
+# --- ALTERAÇÃO AQUI: Recebe e grava a data correta ---
 def insert_tracking_event(data):
     """
     Salva um evento de clique na tabela tracking_events.
@@ -53,10 +53,11 @@ def insert_tracking_event(data):
 
     try:
         cur = conn.cursor()
+        # Adicionei 'created_at' no INSERT
         cur.execute("""
             INSERT INTO tracking_events 
-            (site_source, uid, botao, pagina_origem, url_destino, ip_address, localizacao, provedor, dispositivo)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            (site_source, uid, botao, pagina_origem, url_destino, ip_address, localizacao, provedor, dispositivo, created_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             data['site_source'],
             data['uid'],
@@ -66,10 +67,10 @@ def insert_tracking_event(data):
             data['ip_address'],
             data['localizacao'],
             data['provedor'],
-            data['dispositivo']
+            data['dispositivo'],
+            data['created_at']  # <--- DATA BRASILEIRA VINDA DO PYTHON
         ))
         conn.commit()
-        print(f"💾 Tracking salvo no BD: {data['botao']}")
     except Exception as e:
         print(f"❌ Erro ao salvar tracking no BD: {e}")
     finally:

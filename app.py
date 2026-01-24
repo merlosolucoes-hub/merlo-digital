@@ -370,7 +370,7 @@ def track_click():
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
     global BUFFER_CLIQUES
-    hora_br = datetime.utcnow() - timedelta(hours=6)
+    hora_br = datetime.utcnow() - timedelta(hours=3)
     print(f"⏰ Cron Job acionado em {hora_br.strftime('%H:%M:%S')}")
 
     if len(BUFFER_CLIQUES) > 0:
