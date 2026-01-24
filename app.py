@@ -1,8 +1,10 @@
 import os
+import csv
 import requests
 import resend
 import threading
 import uuid
+from io import StringIO
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
@@ -25,7 +27,7 @@ CACHE_TIMEOUT_HORAS = 1
 MEUS_IPS_IGNORADOS = ['177.5.139.35']
 HOST_URL = "https://merlodigital.com"
 
-# Define quem é o dono desse tracking (para separar no banco depois)
+# Nome do Site para o DB
 SITE_SOURCE_NAME = "Merlô"
 
 
@@ -70,7 +72,6 @@ def get_portfolio_data(force_refresh=False):
     try:
         print("🔌 Conectando ao Neon DB para buscar Portfolio...")
         portfolio_tab_id = get_table_id_by_name('Portfolio')
-
         if not portfolio_tab_id:
             portfolio_tab_id = get_table_id_by_name('Portfólio')
 
@@ -79,7 +80,6 @@ def get_portfolio_data(force_refresh=False):
             return PORTFOLIO_CACHE or []
 
         projects = get_sheet_data(portfolio_tab_id)
-
         final_projects = []
         for row in projects:
             titulo = row.get('Título', '')
@@ -109,7 +109,7 @@ def get_portfolio_data(force_refresh=False):
         return final_projects
 
     except Exception as e:
-        print(f"❌ Erro crítico ao buscar portfólio no DB: {e}")
+        print(f"❌ Erro crítico ao buscar portfólio: {e}")
         return PORTFOLIO_CACHE if PORTFOLIO_CACHE else []
 
 
@@ -124,7 +124,6 @@ def processar_envio_background(lista_cliques, motivo):
     itens_html = ""
     for item in lista_cliques:
         # A lista já vem com geolocalização processada do 'save_click_async'
-        # ou se veio do buffer antigo, garantimos chaves
         loc = item.get('localizacao', 'Processando...')
         rede = item.get('provedor', 'Processando...')
 
@@ -181,35 +180,31 @@ def processar_envio_background(lista_cliques, motivo):
 
 def save_click_async(clique_data):
     """
-    Roda em thread separada para não travar o usuário:
+    Thread de processamento:
     1. Busca GeoIP (lento)
-    2. Salva no Banco de Dados (Postgres)
-    3. Adiciona ao buffer de e-mail
+    2. Salva no DB com hora BR
+    3. Buffer E-mail
     """
     global BUFFER_CLIQUES
 
-    # 1. Enriquecer com GeoIP
     geo_data = get_location_data_rich(clique_data['ip_address'])
 
     clique_data['localizacao'] = geo_data['local']
     clique_data['provedor'] = geo_data['rede']
 
-    # 2. Salvar no Banco de Dados (Para o My Ô)
-    # Aqui passamos a variável de ambiente ou constante do site
+    # Adiciona a fonte do site e salva
     clique_data['site_source'] = SITE_SOURCE_NAME
     insert_tracking_event(clique_data)
 
-    # 3. Adicionar ao Buffer de E-mail (Mantém o relatório antigo funcionando)
     BUFFER_CLIQUES.append(clique_data)
 
-    # 4. Verifica se deve disparar e-mail
     if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
         lote_atual = list(BUFFER_CLIQUES)
         BUFFER_CLIQUES.clear()
         processar_envio_background(lote_atual, "Buffer Cheio")
 
 
-# --- ROTAS DE VIEW ---
+# --- ROTAS VIEW (SEO E TEXTOS ORIGINAIS RESTAURADOS) ---
 
 @app.route('/')
 def index():
@@ -313,7 +308,7 @@ def contato():
     )
 
 
-# --- API TRACKING ATUALIZADA ---
+# --- API TRACKING ---
 @app.route('/api/track-click', methods=['POST'])
 def track_click():
     if request.headers.getlist("X-Forwarded-For"):
@@ -325,9 +320,9 @@ def track_click():
     user_agent = parse(ua_string)
 
     if user_agent.is_bot:
-        return jsonify({'status': 'ignorado', 'motivo': 'robo'}), 200
+        return jsonify({'status': 'ignorado'}), 200
     if user_ip in MEUS_IPS_IGNORADOS:
-        return jsonify({'status': 'ignorado', 'motivo': 'admin'}), 200
+        return jsonify({'status': 'ignorado'}), 200
 
     usuario_id = request.cookies.get('merlo_uid')
     is_new_user = False
@@ -341,6 +336,8 @@ def track_click():
     icone = "📱" if user_agent.is_mobile else "💻"
 
     data_req = request.get_json()
+
+    # --- CORREÇÃO DE DATA: Captura a hora BR (-3) para o Banco ---
     hora_atual = datetime.utcnow() - timedelta(hours=3)
 
     novo_clique = {
@@ -349,13 +346,17 @@ def track_click():
         "botao": data_req.get('botao', 'Clique Genérico'),
         "pagina_origem": data_req.get('pagina_origem', '/'),
         "url_destino": data_req.get('url_destino', '#'),
+
+        # Strings para o E-mail e Log
         "hora_fmt": hora_atual.strftime("%H:%M:%S"),
-        "ip_address": user_ip,
         "device_str": f"{icone} {navegador} no {dispositivo}",
-        "dispositivo": f"{icone} {navegador}"  # Campo simplificado para o DB
+
+        # Dados para o Banco (Incluindo created_at)
+        "ip_address": user_ip,
+        "dispositivo": f"{icone} {navegador}",
+        "created_at": hora_atual
     }
 
-    # --- MUDANÇA: Inicia Thread que Salva no DB e depois manda Email ---
     t = threading.Thread(target=save_click_async, args=(novo_clique,))
     t.start()
 
