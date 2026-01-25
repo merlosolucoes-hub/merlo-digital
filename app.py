@@ -11,7 +11,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, jso
 from user_agents import parse
 
 # --- ALTERAÇÃO: Importando funções do DB ---
-from db_utils import get_table_id_by_name, get_sheet_data, insert_tracking_event
+from db_utils import get_table_id_by_name, get_sheet_data, insert_tracking_event, get_tracking_settings
 
 load_dotenv()
 
@@ -20,15 +20,14 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave_dev_padrao')
 resend.api_key = os.getenv('RESEND_API_KEY')
 
 BUFFER_CLIQUES = []
-LIMITE_BUFFER_IMEDIATO = 10
 PORTFOLIO_CACHE = []
 ULTIMA_ATUALIZACAO_PORTFOLIO = None
 CACHE_TIMEOUT_HORAS = 1
 MEUS_IPS_IGNORADOS = ['177.5.139.35']
 HOST_URL = "https://merlodigital.com"
 
-# Nome do Site para o DB
-SITE_SOURCE_NAME = "Merlô Digital - Site"
+# Nome do Site para o DB (Deve ser igual ao configurado no My Ô)
+SITE_SOURCE_NAME = "Merlô"
 
 
 def get_location_data_rich(ip_address):
@@ -116,7 +115,16 @@ def get_portfolio_data(force_refresh=False):
 def processar_envio_background(lista_cliques, motivo):
     """
     Roda em Thread separada para envio de e-mails.
+    Agora respeita a configuração do My Ô.
     """
+    # 1. Busca configurações atualizadas do banco
+    settings = get_tracking_settings(SITE_SOURCE_NAME)
+    email_ativo = settings.get('email_enabled', True)
+
+    if not email_ativo:
+        print(f"🔕 E-mail desativado nas configurações do My Ô. Apenas salvando no banco.")
+        return
+
     email_destino = os.getenv('EMAIL_DESTINO')
     if not lista_cliques or not email_destino:
         return
@@ -164,7 +172,7 @@ def processar_envio_background(lista_cliques, motivo):
                 <div style="padding: 15px; border-bottom: 2px solid #16305D;">
                     <h3 style="color: #16305D; margin: 0;">Relatório de Inteligência</h3>
                     <p style="font-size: 12px; color: #777; margin: 5px 0 0 0;">
-                        Motivo: {motivo} • Processamento Assíncrono
+                        Motivo: {motivo} • Config: {settings.get('bucket_size')} cliques
                     </p>
                 </div>
                 <ul style="padding: 0; margin-top: 20px;">
@@ -183,7 +191,7 @@ def save_click_async(clique_data):
     Thread de processamento:
     1. Busca GeoIP (lento)
     2. Salva no DB com hora BR
-    3. Buffer E-mail
+    3. Buffer E-mail (Respeitando configs do My Ô)
     """
     global BUFFER_CLIQUES
 
@@ -198,7 +206,12 @@ def save_click_async(clique_data):
 
     BUFFER_CLIQUES.append(clique_data)
 
-    if len(BUFFER_CLIQUES) >= LIMITE_BUFFER_IMEDIATO:
+    # --- LÓGICA DINÂMICA DO MY Ô ---
+    # Busca configurações em tempo real
+    settings = get_tracking_settings(SITE_SOURCE_NAME)
+    bucket_size = int(settings.get('bucket_size', 10))
+
+    if len(BUFFER_CLIQUES) >= bucket_size:
         lote_atual = list(BUFFER_CLIQUES)
         BUFFER_CLIQUES.clear()
         processar_envio_background(lote_atual, "Buffer Cheio")
@@ -308,11 +321,15 @@ def contato():
     )
 
 
-# --- API TRACKING ---
+# --- API TRACKING CORRIGIDA ---
 @app.route('/api/track-click', methods=['POST'])
 def track_click():
+    # --- CORREÇÃO DO IP ---
+    # Pega o primeiro IP da lista se houver proxy (Render/Vercel)
     if request.headers.getlist("X-Forwarded-For"):
-        user_ip = request.headers.getlist("X-Forwarded-For")[0]
+        raw_ip = request.headers.getlist("X-Forwarded-For")[0]
+        # Se vier "200.1.1.1, 10.0.0.1", pega só o primeiro e remove espaços
+        user_ip = raw_ip.split(',')[0].strip()
     else:
         user_ip = request.remote_addr
 
@@ -320,9 +337,9 @@ def track_click():
     user_agent = parse(ua_string)
 
     if user_agent.is_bot:
-        return jsonify({'status': 'ignorado'}), 200
+        return jsonify({'status': 'ignorado', 'motivo': 'robo'}), 200
     if user_ip in MEUS_IPS_IGNORADOS:
-        return jsonify({'status': 'ignorado'}), 200
+        return jsonify({'status': 'ignorado', 'motivo': 'admin'}), 200
 
     usuario_id = request.cookies.get('merlo_uid')
     is_new_user = False
@@ -369,9 +386,21 @@ def track_click():
 
 @app.route('/api/cron-job', methods=['GET'])
 def cron_job():
+    """
+    Rota chamada pelo Cron Job externo.
+    Agora respeita a configuração de intervalo do usuário.
+    """
     global BUFFER_CLIQUES
-    hora_br = datetime.utcnow() - timedelta(hours=3)
-    print(f"⏰ Cron Job acionado em {hora_br.strftime('%H:%M:%S')}")
+
+    # Busca configurações
+    settings = get_tracking_settings(SITE_SOURCE_NAME)
+    cron_interval_config = str(settings.get('cron_interval', '15'))
+
+    # Se estiver desativado no painel, não envia por tempo
+    if cron_interval_config == 'off':
+        # Mas ainda atualiza o portfólio
+        get_portfolio_data(force_refresh=True)
+        return jsonify({'status': 'skipped', 'reason': 'cron_disabled_by_user'}), 200
 
     if len(BUFFER_CLIQUES) > 0:
         lote_atual = list(BUFFER_CLIQUES)
@@ -418,6 +447,7 @@ def termos():
         title="Termos de Uso e Privacidade | Merlô Digital",
         description="Transparência total. Nossas políticas de privacidade, LGPD e termos de serviço."
     )
+
 
 # --- ROTA DE ERRO 404 ---
 @app.errorhandler(404)
