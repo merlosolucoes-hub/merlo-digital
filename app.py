@@ -27,7 +27,7 @@ MEUS_IPS_IGNORADOS = ['177.5.139.35']
 HOST_URL = "https://merlodigital.com"
 
 # Nome do Site para o DB (Deve ser igual ao configurado no My Ô)
-SITE_SOURCE_NAME = "Merlô"
+SITE_SOURCE_NAME = "Merlô Digital - Site"
 
 
 def get_location_data_rich(ip_address):
