@@ -76,7 +76,7 @@
         "closes": "19:00"
       },
       "sameAs": [
-        "https://www.instagram.com/merlodigital.solucoes",
+        "https://www.instagram.com/merlodigital.myo",
         "https://www.linkedin.com/company/merlo-digital"
       ],
       "founder": {
@@ -108,7 +108,7 @@
                 <span class="small text-white-50"><i class="bi bi-geo-alt-fill me-2 text-info"></i> Blumenau, SC</span>
             </div>
             <div class="top-socials d-flex gap-3">
-                <a href="https://instagram.com/merlodigital.solucoes" target="_blank" class="text-white-50 hover-white" title="Instagram">
+                <a href="https://instagram.com/merlodigital.myo" target="_blank" class="text-white-50 hover-white" title="Instagram">
                     <i class="bi bi-instagram"></i>
                 </a>
                 <a href="https://wa.me/5547992539750" target="_blank" class="text-white-50 hover-white" title="WhatsApp">
@@ -131,13 +131,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('index') }}">
+                        <a class="nav-link {% if request.path == url_for('index') or request.path == '/' %}active{% endif %}" href="{{ url_for('index') }}">
                             Início
                         </a>
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('servicos') }}">
+                        <a class="nav-link {% if request.path == url_for('servicos') %}active{% endif %}" href="{{ url_for('servicos') }}">
                             Serviços
                         </a>
                     </li>
@@ -208,7 +208,7 @@
                         Transformamos ideias em códigos limpos, seguros e escaláveis para impulsionar seu negócio no ambiente digital.
                     </p>
                     <div class="social-links d-flex gap-3">
-                        <a href="https://instagram.com/merlodigital.solucoes" class="btn btn-icon btn-outline-light rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="https://instagram.com/merlodigital.myo" class="btn btn-icon btn-outline-light rounded-circle"><i class="bi bi-instagram"></i></a>
                         <a href="https://wa.me/5547992539750" class="btn btn-icon btn-outline-light rounded-circle"><i class="bi bi-whatsapp"></i></a>
                         <a href="mailto:atendimento@merlodigital.com" class="btn btn-icon btn-outline-light rounded-circle"><i class="bi bi-envelope"></i></a>
                     </div>
