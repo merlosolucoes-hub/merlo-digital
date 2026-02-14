@@ -45,53 +45,102 @@
                 </div>
             </div>
         {% else %}
-            <div class="row g-4 pt-4">
-                {% for p in projects %}
-                <div class="col-md-6 col-lg-4 fade-in-up">
-                    <div class="project-card h-100 d-flex flex-column bg-dark border border-secondary rounded-4 overflow-hidden position-relative">
 
-                        <div class="project-img-wrapper position-relative bg-black d-flex align-items-center justify-content-center p-4">
-                            <div class="project-overlay"></div>
+            <div class="mb-5">
+                <div class="d-flex align-items-center mb-4 fade-in-up">
+                    <h3 class="text-white fw-bold mb-0">
+                        <i class="bi bi-rocket-takeoff-fill text-success me-2"></i> Cases de Sucesso
+                    </h3>
+                    <div class="ms-3 border-top border-secondary flex-grow-1 opacity-50"></div>
+                </div>
 
-                            {% if p['Logo'] %}
-                                <img src="{{ p['Logo'] }}" alt="{{ p['Título'] }}" class="img-fluid project-logo position-relative z-2 rounded-3" loading="lazy">
-                            {% else %}
-                                <div class="placeholder-logo text-muted opacity-25 position-relative z-2">
-                                    <i class="bi bi-image display-4"></i>
+                <div class="row g-4">
+                    {% for p in projects if p['Tipo'] != 'Em Produção' %}
+                    <div class="col-md-6 col-lg-4 fade-in-up">
+                        <div class="project-card h-100 d-flex flex-column bg-dark border border-secondary rounded-4 overflow-hidden position-relative shadow-sm">
+                            <div class="project-img-wrapper position-relative bg-black d-flex align-items-center justify-content-center p-4">
+                                <div class="project-overlay"></div>
+                                {% if p['Logo'] %}
+                                    <img src="{{ p['Logo'] }}" alt="{{ p['Título'] }}" class="img-fluid project-logo position-relative z-2 rounded-3" loading="lazy">
+                                {% else %}
+                                    <div class="placeholder-logo text-muted opacity-25 position-relative z-2">
+                                        <i class="bi bi-image display-4"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="position-absolute top-0 end-0 m-3 z-3">
+                                    <span class="badge bg-success bg-opacity-25 border border-success text-success rounded-pill px-3 py-2">
+                                        No Ar
+                                    </span>
                                 </div>
-                            {% endif %}
-
-                            <div class="position-absolute top-0 end-0 m-3 z-3">
-                                <span class="badge bg-darker border border-secondary text-info rounded-pill px-3 py-2 shadow-sm">
-                                    {{ p['Tipo'] }}
-                                </span>
                             </div>
-                        </div>
 
-                        <div class="card-body p-4 d-flex flex-column flex-grow-1">
-                            <h4 class="card-title text-white mb-2">{{ p['Título'] }}</h4>
-
-                            <p class="card-text text-muted small mb-4 flex-grow-1" style="line-height: 1.6;">
-                                {{ p['Descrição'] }}
-                            </p>
-
-                            <div class="mt-auto">
-                                {% if p['Link'] %}
+                            <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                                <h4 class="card-title text-white mb-2">{{ p['Título'] }}</h4>
+                                <p class="card-text text-muted small mb-4 flex-grow-1" style="line-height: 1.6;">
+                                    {{ p['Descrição'] }}
+                                </p>
+                                <div class="mt-auto">
                                     <a href="{{ p['Link'] }}" target="_blank" class="btn btn-outline-light w-100 rounded-pill project-btn">
                                         Visitar Projeto <i class="bi bi-arrow-up-right ms-2"></i>
                                     </a>
-                                {% else %}
-                                    <button class="btn btn-secondary w-100 rounded-pill opacity-50" disabled style="cursor: not-allowed;">
-                                        Em Desenvolvimento <i class="bi bi-cone-striped ms-2"></i>
-                                    </button>
-                                {% endif %}
+                                </div>
                             </div>
                         </div>
-
                     </div>
+                    {% else %}
+                        <p class="text-muted">Nenhum projeto ativo listado no momento.</p>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
+
+            <div class="mt-5 pt-4">
+                <div class="d-flex align-items-center mb-4 fade-in-up delay-1">
+                    <h3 class="text-white fw-bold mb-0">
+                        <i class="bi bi-cone-striped text-warning me-2"></i> Em Desenvolvimento
+                    </h3>
+                    <div class="ms-3 border-top border-secondary flex-grow-1 opacity-50"></div>
+                </div>
+
+                <div class="row g-4">
+                    {% for p in projects if p['Tipo'] == 'Em Produção' %}
+                    <div class="col-md-6 col-lg-4 fade-in-up delay-2">
+                        <div class="project-card h-100 d-flex flex-column bg-dark border border-secondary border-opacity-50 rounded-4 overflow-hidden position-relative" style="opacity: 0.85;">
+
+                            <div class="project-img-wrapper position-relative bg-black d-flex align-items-center justify-content-center p-4">
+                                <div class="project-overlay"></div>
+                                {% if p['Logo'] %}
+                                    <img src="{{ p['Logo'] }}" alt="{{ p['Título'] }}" class="img-fluid project-logo position-relative z-2 rounded-3 grayscale-filter" loading="lazy">
+                                {% else %}
+                                    <div class="placeholder-logo text-muted opacity-25 position-relative z-2">
+                                        <i class="bi bi-cone display-4"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="position-absolute top-0 end-0 m-3 z-3">
+                                    <span class="badge bg-warning text-dark border border-warning rounded-pill px-3 py-2 fw-bold">
+                                        Em Breve
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                                <h4 class="card-title text-white-50 mb-2">{{ p['Título'] }}</h4>
+                                <p class="card-text text-muted small mb-4 flex-grow-1">
+                                    {{ p['Descrição'] }}
+                                </p>
+                                <div class="mt-auto">
+                                    <button class="btn btn-secondary w-100 rounded-pill opacity-50" disabled style="cursor: not-allowed;">
+                                        Aguarde o Lançamento <i class="bi bi-lock-fill ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% else %}
+                        {% endfor %}
+                </div>
+            </div>
+
         {% endif %}
 
     </div>
