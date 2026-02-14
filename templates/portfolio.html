@@ -44,18 +44,22 @@
                     </div>
                 </div>
             </div>
-        {% else %}
+{% else %}
 
+            {% set active_projects = projects | selectattr('Tipo', '!=', 'Em Produção') | list %}
+            {% set dev_projects = projects | selectattr('Tipo', 'equalto', 'Em Produção') | list %}
+
+            {% if active_projects %}
             <div class="mb-5">
                 <div class="d-flex align-items-center mb-4 fade-in-up">
                     <h3 class="text-white fw-bold mb-0">
-                        <i class="bi bi-rocket-takeoff-fill text-success me-2"></i> Cases de Sucesso
+                        <i class="bi bi-rocket-takeoff-fill text-success me-2"></i> Sites ativos
                     </h3>
                     <div class="ms-3 border-top border-secondary flex-grow-1 opacity-50"></div>
                 </div>
 
                 <div class="row g-4">
-                    {% for p in projects if p['Tipo'] != 'Em Produção' %}
+                    {% for p in active_projects %}
                     <div class="col-md-6 col-lg-4 fade-in-up">
                         <div class="project-card h-100 d-flex flex-column bg-dark border border-secondary rounded-4 overflow-hidden position-relative shadow-sm">
                             <div class="project-img-wrapper position-relative bg-black d-flex align-items-center justify-content-center p-4">
@@ -87,12 +91,12 @@
                             </div>
                         </div>
                     </div>
-                    {% else %}
-                        <p class="text-muted">Nenhum projeto ativo listado no momento.</p>
                     {% endfor %}
                 </div>
             </div>
+            {% endif %}
 
+            {% if dev_projects %}
             <div class="mt-5 pt-4">
                 <div class="d-flex align-items-center mb-4 fade-in-up delay-1">
                     <h3 class="text-white fw-bold mb-0">
@@ -102,7 +106,7 @@
                 </div>
 
                 <div class="row g-4">
-                    {% for p in projects if p['Tipo'] == 'Em Produção' %}
+                    {% for p in dev_projects %}
                     <div class="col-md-6 col-lg-4 fade-in-up delay-2">
                         <div class="project-card h-100 d-flex flex-column bg-dark border border-secondary border-opacity-50 rounded-4 overflow-hidden position-relative" style="opacity: 0.85;">
 
@@ -136,10 +140,10 @@
 
                         </div>
                     </div>
-                    {% else %}
-                        {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
+            {% endif %}
 
         {% endif %}
 
