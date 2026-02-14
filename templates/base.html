@@ -19,21 +19,19 @@
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="{{ description if description else 'Engenharia de Software para Negócios Reais. Potencialize sua empresa com a Merlô Digital.' }}">
     <meta property="og:url" content="{{ request.url }}">
-    <meta property="og:image" content="{{ url_for('static', filename='og-image.jpg', _external=True) }}">
-    <meta property="og:image:secure_url" content="{{ url_for('static', filename='og-image.jpg', _external=True) }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Merlô Digital - Tecnologia e Performance">
 
+    <meta property="og:image" content="{{ url_for('static', filename='logo.png', _external=True) }}">
+    <meta property="og:image:secure_url" content="{{ url_for('static', filename='logo.png', _external=True) }}">
+    <meta property="og:image:alt" content="Merlô Digital - Tecnologia e Performance">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ title }}">
     <meta name="twitter:description" content="{{ description if description else 'Engenharia de Software para Negócios Reais.' }}">
-    <meta name="twitter:image" content="{{ url_for('static', filename='og-image.jpg', _external=True) }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='logo.png', _external=True) }}">
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='logo.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='cleanlogo.png') }}" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='cleanlogo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='cleanlogo.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='cleanlogo.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
